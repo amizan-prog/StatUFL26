@@ -4186,4 +4186,30 @@ h3 {
       }
     }
   </style>
+  <style>
+    /* Keep ready unit cards visibly flashing after every refresh and re-render. */
+    .status-card.card-ready-glow:not(.speaking) {
+      animation: readyCardFlash 1.8s ease-in-out infinite !important;
+      border-color: var(--color-rag-green) !important;
+    }
+
+    @keyframes readyCardFlash {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgb(21 128 61 / 0.18), 0 0.5rem 0 rgb(15 23 42 / 0.14), 0 1rem 1.5rem -0.5rem rgb(21 128 61 / 0.24);
+        filter: brightness(1);
+      }
+      50% {
+        box-shadow: 0 0 0 0.45rem rgb(21 128 61 / 0.16), 0 0.5rem 0 rgb(15 23 42 / 0.14), 0 1.5rem 2rem -0.35rem rgb(21 128 61 / 0.52);
+        filter: brightness(1.08);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .status-card.card-ready-glow:not(.speaking) {
+        animation: none !important;
+        box-shadow: 0 0 0 0.2rem rgb(21 128 61 / 0.2), 0 0.5rem 0 rgb(15 23 42 / 0.14), 0 1rem 1.5rem -0.5rem rgb(21 128 61 / 0.3);
+      }
+    }
+  </style>
 </body></html>
