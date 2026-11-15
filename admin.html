@@ -305,59 +305,14 @@
         String(u.perlu_troli).toLowerCase() === 'yes'
       ).length;
     }
-function getSelectColor(field, val) {
-      if (field === 'drip' || field === 'bukan_ubat') {
-        if (val === 'Inden Sedia Diambil') {
-          return 'border-emerald-500 bg-emerald-100 text-emerald-900 dark:bg-emerald-950/80 dark:text-emerald-200 dark:border-emerald-500';
-        }
-        if (val === 'Inden Sedang Diproses') {
-          return 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200 dark:border-amber-500';
-        }
-        if (val === 'Inden Baru Diterima') {
-          return 'border-blue-500 bg-blue-100 text-blue-900 dark:bg-blue-950/80 dark:text-blue-200 dark:border-blue-500';
-        }
-        if (val === 'Belum Diterima') {
-          return 'border-slate-400 bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600';
-        }
-        return 'border-slate-200 bg-white text-slate-500 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-700';
-      }
 
-      if (field === 'perlu_troli') {
-        return String(val).toLowerCase() === 'yes'
-          ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200 dark:border-amber-500'
-          : 'border-slate-200 bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
-      }
-
-      if (field === 'urgency') {
-        if (val === 'high') {
-          return 'border-red-500 bg-red-100 text-red-900 dark:bg-red-950/80 dark:text-red-200 dark:border-red-500';
-        }
-        if (val === 'direct') {
-          return 'border-orange-500 bg-orange-100 text-orange-900 dark:bg-orange-950/80 dark:text-orange-200 dark:border-orange-500';
-        }
-        return 'border-slate-200 bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
-      }
-
-      return '';
+    function statusSelectColor(val) {
+      if (val === 'Inden Sedia Diambil') return 'border-emerald-500 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300';
+      if (val === 'Inden Sedang Diproses') return 'border-amber-500 bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300';
+      if (val === 'Inden Baru Diterima') return 'border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300';
+      if (val === 'Belum Diterima') return 'border-slate-300 dark:border-slate-700';
+      return 'border-slate-200 dark:border-slate-800 opacity-75';
     }
-
-    function updateCardStyle(card) {
-      const drip = card.querySelector('[data-field="drip"]').value;
-      const bukanUbat = card.querySelector('[data-field="bukan_ubat"]').value;
-      const urgency = card.querySelector('[data-field="urgency"]').value;
-
-      const isReady = drip === 'Inden Sedia Diambil' || bukanUbat === 'Inden Sedia Diambil';
-      const isUrgent = urgency === 'high' || urgency === 'direct';
-
-      card.classList.remove('border-emerald-500', 'border-red-500', 'border-slate-200', 'dark:border-slate-800');
-      if (isReady) {
-        card.classList.add('border-emerald-500');
-      } else if (isUrgent) {
-        card.classList.add('border-red-500');
-      } else {
-        card.classList.add('border-slate-200', 'dark:border-slate-800');
-      }
-    } }
 
     function renderUnits() {
       const q = searchQuery.toLowerCase().trim();
