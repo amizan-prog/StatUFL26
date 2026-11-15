@@ -2356,7 +2356,12 @@ function status(v) {
           )
           .subscribe();
       }
-
+// Auto-refresh Supabase data every 5 seconds (backup to Realtime)
+      setInterval(() => {
+        if ($('unitPickerModal')?.classList.contains('hidden') && !document.hidden) {
+          refresh();
+        }
+      }, 5000);
       startWallScroll();
       setInterval(updateRelativeTime, 30000);
       setInterval(refreshAutomaticTheme, 60000);
