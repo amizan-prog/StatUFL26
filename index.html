@@ -165,6 +165,26 @@ h3 {
 .dark .badge-orange { background: rgb(154 52 18 / 0.35); color: #fdba74; }
 .dark .badge-grey { background: rgb(51 65 85 / 0.5); color: #cbd5e1; }
 .dark .badge-yellow { background: rgb(146 64 14 / 0.35); color: #fde047; }
+    /* Large Kuantiti Troli label & number on unit cards */
+    .trolley-row {
+      padding: 0.25rem 0.5rem;
+      font-size: clamp(0.85rem, 1.3vw, 1.15rem);
+    }
+
+    .trolley-count {
+      font-family: var(--font-heading);
+      font-size: clamp(2.25rem, 4vw, 3.5rem);
+      line-height: 1;
+    }
+
+    /* Extra-large Kuantiti Troli number when a ward is pinned */
+    .ward-pinned .trolley-row {
+      font-size: clamp(1.1rem, 2vw, 1.75rem);
+    }
+
+    .ward-pinned .trolley-count {
+      font-size: clamp(4rem, 8vw, 7rem);
+    }
   </style>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
