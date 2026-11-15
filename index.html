@@ -809,13 +809,21 @@ h3 {
         .replace(/IPC/gi, 'Inpatient Pharmacy');
     }
 
-    function status(v) {
+function status(v) {
       const n = tr(v);
-      if (n === 'indensediadiambil') return ['badge-green', lang === 'bm' ? 'Sedia Diambil' : 'Ready'];
-      if (n === 'indensedangdiproses') return ['badge-orange', lang === 'bm' ? 'Sedang Diproses' : 'Processing'];
-      if (n === 'indenbelumditerima') return ['badge-red', lang === 'bm' ? 'Belum Diterima' : 'Not Received'];
-      if (n === 'indenbaruditerima') return ['badge-blue', lang === 'bm' ? 'Baru Diterima' : 'New Indent'];
-      return ['badge-blue', v]
+      if (['indensediadiambil', 'sediadiambil'].includes(n)) {
+        return ['badge-green', lang === 'bm' ? 'Sedia Diambil' : 'Ready'];
+      }
+      if (['indensedangdiproses', 'sedangdiproses'].includes(n)) {
+        return ['badge-orange', lang === 'bm' ? 'Sedang Diproses' : 'Processing'];
+      }
+      if (['indenbelumditerima', 'belumditerima'].includes(n)) {
+        return ['badge-grey', lang === 'bm' ? 'Belum Diterima' : 'Not Received'];
+      }
+      if (['indenbaruditerima', 'baruditerima'].includes(n)) {
+        return ['badge-blue', lang === 'bm' ? 'Baru Diterima' : 'New Indent'];
+      }
+      return ['badge-grey', v];
     }
 
     function isUrgent(unit) {
