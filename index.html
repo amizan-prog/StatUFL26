@@ -195,7 +195,8 @@ h3 {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body class="min-h-screen antialiased flex flex-col pb-12 selection:bg-[var(--color-primary)] selection:text-[var(--color-primary-contrast)] titlebar-hidden">
+</head>
+<body class="min-h-screen antialiased flex flex-col pb-12 selection:bg-[var(--color-primary)] selection:text-[var(--color-primary-contrast)] titlebar-hidden">
   <nav class="bg-[var(--color-surface)]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 shrink-0">
@@ -258,7 +259,198 @@ h3 {
     </div>
 
     <section class="mt-6 sm:mt-8 space-y-4">
-      <div class="flex flex-col md:flex-row gap-3<script>
+      <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        <div class="relative flex-1 max-w-xl">
+          <label for="search" class="sr-only">Search unit</label>
+          <input id="search" type="search" data-layout="ward-search" oninput="searchUnits(this.value)" class="input w-full pr-10" placeholder="Search ward or unit code/name..." autocomplete="off">
+          <button id="clear" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <label for="wardPin" class="sr-only">Pin ward</label>
+          <select id="wardPin" onchange="pinWard(this.value)" class="input ward-select" aria-label="Pin a ward"><option value="">All Units</option></select>
+          <label class="auto-chime-toggle" data-layout="auto-chime"><input id="autoChime" type="checkbox" onchange="toggleAutoChime(this.checked)"><span data-t="autoChime">Auto-announce pinned ward</span></label>
+        </div>
+        <div class="flex items-center">
+          <label for="filterSelect" class="sr-only">Filter units</label>
+          <div id="filterTabs" class="filter-tabs" role="tablist" aria-label="Filter units">
+            <button type="button" class="filter-tab active" data-filter="all" onclick="setFilter('all')" aria-selected="true">All Units</button>
+            <button type="button" class="filter-tab" data-filter="ready" onclick="setFilter('ready')" aria-selected="false">Indent Ready</button>
+            <button type="button" class="filter-tab" data-filter="need" onclick="setFilter('need')" aria-selected="false">Need Trolley</button>
+            <button type="button" class="filter-tab" data-filter="urgent" onclick="setFilter('urgent')" aria-selected="false">Urgent / Direct Issue</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between text-xs text-[var(--color-muted)]"><span><b id="count" class="text-[var(--color-text)]">0</b> <span data-t="unitsShown">units shown</span></span><span id="tapCueText" data-t="tapForAudio" class="sm:hidden"><i class="fa-solid fa-volume-high text-[var(--color-primary)] mr-1"></i>Tap the speaker button for audio</span></div>
+    </section>
+
+    <div id="offlineBanner" class="hidden mt-4 rounded-[var(--radius)] border-2 border-red-500 bg-red-50 px-4 py-3 text-sm font-bold text-red-800 dark:border-red-400 dark:bg-red-950/60 dark:text-red-200" role="alert" aria-live="polite">
+      <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+      <span data-t="offlineBanner">Connection Lost - Data Not Updated</span>
+    </div>
+
+    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 mt-4 min-h-[300px]" role="status" aria-live="polite" aria-atomic="false">
+      <div class="col-span-full text-center py-16 text-[var(--color-muted)]">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-[var(--color-primary)]"></i>
+        <p>Menyambung ke Supabase...</p>
+      </div>
+    </div>
+
+    <div id="pages" class="flex flex-wrap justify-center gap-1.5 mt-8 pb-8"></div>
+  </main>
+
+  <div id="notificationsPanel" class="fixed bottom-4 right-4 sm:top-5 sm:bottom-auto z-50 w-[min(380px,calc(100vw-2rem))] space-y-2.5 pointer-events-none"></div>
+  <div id="changeToast" class="fixed bottom-4 left-4 z-40 max-w-sm rounded-xl bg-emerald-700 text-white px-4 py-3 shadow-xl flex items-center gap-3 hidden"><i class="fa-solid fa-circle-check"></i><span id="changeToastText" class="text-xs font-medium">Suara Bahasa Indonesia digunakan.</span></div>
+
+  <div id="unitPickerModal" class="fixed inset-0 z-[70] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="unitPickerTitle">
+    <script>
+      if (localStorage.getItem('statufl_first_unit_confirmed') === 'yes' || localStorage.getItem('statufl_pinned_ward')) {
+        document.getElementById('unitPickerModal').classList.add('hidden');
+      }
+    </script>
+    <div class="bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 rounded-[var(--radius)] w-full max-w-md overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-[var(--color-primary)] text-[var(--color-primary-contrast)] flex items-center justify-center">
+            <i class="fa-solid fa-hospital-user text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 id="unitPickerTitle" class="font-bold">Pilih Unit/Wad Anda</h3>
+                <p id="unitPickerSubtitle" class="text-xs text-[var(--color-muted)]">Pilih unit untuk membuka paparan ward dipinkan.</p>
+              </div>
+              <button type="button" id="unitPickerLangButton" onclick="toggleUnitPickerLanguage()" class="control shrink-0" title="Tukar bahasa" aria-label="Tukar bahasa">EN</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-5 space-y-3">
+        <label id="firstUnitPickerLabel" for="firstUnitPicker" class="label">Unit / Wad</label>
+        <select id="firstUnitPicker" class="input" aria-describedby="unitPickerHelp"><option value="">Pilih unit atau wad</option></select>
+        <p id="unitPickerHelp" class="text-xs text-[var(--color-muted)]">Pilihan ini akan disimpan pada peranti ini dan digunakan selepas refresh.</p>
+        <p id="unitPickerError" class="hidden text-xs font-bold text-[var(--color-alert)]">Sila pilih unit atau wad untuk meneruskan.</p>
+      </div>
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+        <button type="button" onclick="confirmFirstUnit()" class="px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-contrast)] rounded-xl text-sm font-semibold">BUKA</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="voiceConsentModal" class="hidden fixed inset-0 z-[60] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 rounded-[var(--radius)] w-full max-w-md overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-[var(--color-primary)] text-[var(--color-primary-contrast)] flex items-center justify-center">
+            <i class="fa-solid fa-language text-lg"></i>
+          </div>
+          <div>
+            <h3 id="voiceConsentTitle" data-t="voiceConsentTitle" class="font-bold">Suara Bahasa Indonesia</h3>
+            <p id="voiceConsentSubtitle" data-t="voiceConsentSubtitle" class="text-xs text-[var(--color-muted)]">Tetapan audio kali pertama</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-5 space-y-3">
+        <p id="voiceConsentText" data-t="voiceConsentText" class="text-sm leading-relaxed">Benarkan aplikasi menggunakan suara Bahasa Indonesia yang tersedia pada peranti anda untuk bacaan status yang lebih natural?</p>
+        <p id="voiceConsentNote" data-t="voiceConsentNote" class="text-xs text-[var(--color-muted)]">Aplikasi web tidak boleh memasang voice pack sistem secara senyap. Selepas persetujuan, ia akan memilih suara Bahasa Indonesia yang telah dipasang pada peranti.</p>
+        <div class="rounded-[var(--radius)] border border-[var(--color-warning-border)] bg-[var(--color-warning-surface)] p-3 text-xs text-[var(--color-warning)]">
+          <strong class="block text-[var(--color-text)]">Malay voice unavailable?</strong>
+          <p class="mt-1">Install a Malay voice pack on your device, then reopen the browser.</p>
+          <p class="mt-2">Android: Settings → System → Text-to-speech. iPhone/iPad: Settings → Accessibility → Spoken Content → Voices. macOS: System Settings → Accessibility → Read &amp; Speak.</p>
+        </div>
+        <details class="group rounded-[var(--radius)] border border-slate-200 dark:border-slate-700 bg-[var(--color-bg)] overflow-hidden">
+          <summary class="cursor-pointer list-none p-3 text-xs font-bold flex items-center justify-between gap-3">
+            <span><i class="fa-solid fa-circle-info text-[var(--color-primary)] mr-2"></i><span data-t="voiceGuide">Panduan pasang voice pack Bahasa Melayu</span></span>
+            <i class="fa-solid fa-chevron-down text-[var(--color-muted)] transition-transform group-open:rotate-180"></i>
+          </summary>
+          <div class="px-3 pb-3 space-y-3 text-[11px] leading-relaxed text-[var(--color-muted)]">
+            <div>
+              <strong data-t="voiceGuideWindows" class="block text-[var(--color-text)] mb-0.5">Windows 10/11</strong>
+              <span data-t="voiceGuideWindowsText">Tetapan → Masa &amp; bahasa → Bahasa &amp; rantau → Tambah bahasa → cari “Malay (Malaysia)” → Pilihan bahasa → Teks ke pertuturan → Muat turun. Tutup dan buka semula pelayar selepas selesai.</span>
+            </div>
+            <div>
+              <strong data-t="voiceGuideAndroid" class="block text-[var(--color-text)] mb-0.5">Android</strong>
+              <span data-t="voiceGuideAndroidText">Tetapan → Pengurusan umum atau Sistem → Output teks ke pertuturan → Enjin pilihan → pilih Google Speech Services → Pasang data suara → Malay (Malaysia). Nama menu mungkin berbeza mengikut jenama telefon.</span>
+            </div>
+            <div>
+              <strong data-t="voiceGuideIphone" class="block text-[var(--color-text)] mb-0.5">iPhone / iPad</strong>
+              <span data-t="voiceGuideIphoneText">Tetapan → Kebolehcapaian → Kandungan Dituturkan → Suara → Malay → pilih dan muat turun suara yang tersedia. Selepas itu, buka semula Safari atau aplikasi.</span>
+            </div>
+            <div>
+              <strong data-t="voiceGuideMac" class="block text-[var(--color-text)] mb-0.5">macOS</strong>
+              <span data-t="voiceGuideMacText">Tetapan Sistem → Kebolehcapaian → Baca &amp; Sebut → Suara sistem → Urus Suara → cari Malay/Malay (Malaysia) → Muat turun. Buka semula pelayar selepas pemasangan.</span>
+            </div>
+            <p data-t="voiceGuideMissing" class="pt-2 border-t border-slate-200 dark:border-slate-700">Jika “Malay”, “ms-MY” atau “Microsoft Rizwan” tidak muncul, sistem operasi atau pelayar anda mungkin tidak menyediakan voice pack tersebut. <a href="ms-settings:regionlanguage" class="text-[var(--color-primary)] underline font-semibold">Buka tetapan Bahasa Windows</a> untuk memasang bahasa dan suara yang tersedia, kemudian tekan Benarkan &amp; Sediakan semula.</p>
+          </div>
+        </details>
+        <div id="voiceConsentStatus" class="hidden rounded-xl p-3 text-xs font-medium"></div>
+      </div>
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-2">
+        <button onclick="declineVoicePack()" id="voiceDeclineButton" data-t="voiceDecline" class="px-3.5 py-2 text-xs font-semibold text-[var(--color-muted)]">Tidak Sekarang</button>
+        <button onclick="allowVoicePack()" id="voiceAllowButton" data-t="voiceAllow" class="px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-contrast)] rounded-xl text-xs font-semibold">Benarkan &amp; Sediakan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-start md:items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg max-h-[calc(100dvh-2rem)] md:max-h-[calc(100vh-2rem)] shadow-2xl flex flex-col overflow-hidden">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between shrink-0">
+        <div>
+          <h3 data-t="settingsTitle" class="font-bold">Tetapan Papan Pemuka</h3>
+          <p data-t="configureSheet" class="text-xs text-[var(--color-muted)]">Konfigurasikan paparan &amp; audio Supabase</p>
+        </div><button onclick="closeSettings()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-5 space-y-4 modal-body overflow-y-auto overscroll-contain">
+        <div class="hidden"><label data-t="sheetUrl" class="label">URL / ID Google Sheet</label><input id="sheetUrl" class="input" data-placeholder-bm="Tampal pautan Google Sheets di sini" data-placeholder-en="Paste a Google Sheets link here" placeholder="Tampal pautan Google Sheets di sini">
+          <p data-t="publicSheet" class="text-[11px] text-[var(--color-muted)] mt-1">Pastikan perkongsian ditetapkan kepada <b>'Sesiapa yang mempunyai pautan boleh melihat'</b>.</p>
+        </div>
+        <div class="hidden grid-cols-2 gap-3">
+          <div><label data-t="sheetName" class="label">Nama Tab / Helaian</label><input id="sheetName" value="DATA" class="input" data-placeholder-bm="Nama tab" data-placeholder-en="Sheet name" placeholder="Nama tab"></div>
+          <div><label data-t="range" class="label">Julat Sel</label><input id="sheetRange" value="A:F" class="input" data-placeholder-bm="Julat sel" data-placeholder-en="Cell range" placeholder="Julat sel"></div>
+        </div>
+        <section class="rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 space-y-3" aria-labelledby="dailyReportTitle">
+          <div>
+            <label id="dailyReportTitle" for="dailyReportEmail" class="block text-xs font-semibold">Emel Laporan Lawatan Harian Web</label>
+            <p class="mt-1 text-[11px] text-[var(--color-muted)]">Masukkan emel untuk menerima laporan lawatan STATUFL setiap hari.</p>
+          </div>
+          <input id="dailyReportEmail" class="input" type="email" autocomplete="email" placeholder="nama@contoh.com">
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="subscribeDailyReport()" class="px-3.5 py-2 bg-[var(--color-primary)] text-[var(--color-primary-contrast)] rounded-xl text-xs font-semibold">Daftar laporan harian</button>
+            <button type="button" onclick="unsubscribeDailyReport()" class="px-3.5 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold">Berhenti menerima laporan</button>
+          </div>
+          <p id="dailyReportStatus" class="text-[11px] text-[var(--color-muted)]" role="status" aria-live="polite">Laporan e-mel belum didaftarkan pada peranti ini.</p>
+        </section>
+        <label class="flex items-center justify-between gap-4 rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 cursor-pointer">
+          <div><span data-t="wallMode" class="block text-xs font-semibold">Mod Monitor Dinding</span><span data-t="wallModeHelp" class="block text-[11px] text-[var(--color-muted)] mt-0.5">Paparkan semua unit tanpa pagination dan auto-gerak paparan.</span></div><input id="wallMode" type="checkbox" class="h-4 w-4 accent-brand-600">
+        </label>
+        <label class="flex items-center justify-between gap-4 rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 cursor-pointer">
+          <div><span data-t="soundNotifications" class="block text-xs font-semibold">Audio &amp; Notifikasi Suara</span><span data-t="soundNotificationsHelp" class="block text-[11px] text-[var(--color-muted)] mt-0.5">Mainkan pengumuman suara automatik apabila status berubah.</span></div><input id="soundNotifications" type="checkbox" class="h-4 w-4 accent-brand-600">
+        </label>
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 space-y-3">
+          <div>
+            <span data-t="ttsSettingsTitle" class="block text-xs font-semibold">Tetapan Suara</span>
+            <span data-t="ttsSettingsHelp" class="block text-[11px] text-[var(--color-muted)] mt-0.5">Gunakan suara Bahasa MELAYU/INDONESIA/ENGLISH.</span>
+          </div>
+          <label class="flex items-center justify-between gap-4 cursor-pointer">
+            <span data-t="ttsEnabled" class="text-xs font-semibold">Aktifkan Suara</span>
+            <input id="bmTtsEnabled" type="checkbox" class="h-4 w-4 accent-brand-600">
+          </label>
+          <div>
+            <div class="flex items-center justify-between gap-3">
+              <label for="bmTtsRate" data-t="ttsRate" class="label mb-0">Kelajuan bacaan</label>
+              <output id="bmTtsRateValue" class="text-xs font-bold text-[var(--color-primary)]">0.82x</output>
+            </div>
+            <input id="bmTtsRate" type="range" min="0.5" max="1.5" step="0.05" value="0.82" class="w-full accent-brand-600" aria-label="Kelajuan bacaan Bahasa Melayu">
+          </div>
+          <p id="bmTtsVoiceStatus" class="text-[11px] text-[var(--color-muted)]" role="status" aria-live="polite">1 suara Bahasa Indonesia tersedia sebagai pilihan kedua.</p>
+          <p class="text-[11px] text-[var(--color-muted)]">Jika suara Bahasa Indonesia tidak tersedia, pelayar akan menggunakan suara lalai yang tersedia pada peranti.</p>
+        </div>
+        <div id="settingsStatus" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+      </div>
+      <div class="modal-footer p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex justify-between"><button onclick="testConnection()" data-t="testConnection" class="text-brand-600 font-semibold text-xs">Uji Sambungan</button>
+        <div><button onclick="closeSettings()" data-t="cancel" class="px-3.5 py-1.5 text-xs">Batal</button><button onclick="saveSettings()" data-t="saveSettings" class="px-4 py-1.5 bg-[var(--color-primary)] text-white rounded-xl text-xs font-semibold">Simpan</button></div>
+      </div>
+    </div>
+  </div><script>
     // =========================================================================
     // SUPABASE CONFIGURATION — PASTE YOUR CREDENTIALS BELOW
     // =========================================================================
@@ -2534,3 +2726,4 @@ h3 {
     })();
   </script>
 </body></html>
+  
