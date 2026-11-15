@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>STATUFL • Panel Kemas Kini Farmasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' }
+          }
+        }
+      }
+    };
+    if (localStorage.getItem('statufl_theme') === 'dark' ||
+       (!localStorage.getItem('statufl_theme') && matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased">
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginView" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-6 sm:p-8 space-y-5">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-lg">
+          <i class="fa-solid fa-pills text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold">STATUFL Farmasi</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Log masuk staf untuk kemas kini status inden</p>
+        </div>
+      </div>
+
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Emel Staf</label>
+          <input id="email" type="email" required placeholder="farmasi@ikn.gov.my"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-brand-600">
+        </div>
+        <div>
+          <label for="password" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Kata Laluan</label>
+          <input id="password" type="password" required placeholder="••••••••"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm outline-none focus:ring-2 focus:ring-brand-600">
+        </div>
+        <p id="loginError" class="hidden text-xs font-semibold text-red-600 dark:text-red-400"></p>
+        <button type="submit" id="loginBtn"
+          class="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm shadow-md transition">
+          Log Masuk
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+        <a href="./index.html" class="hover:text-brand-600 font-medium"><i class="fa-solid fa-arrow-left mr-1"></i>Paparan Utama</a>
+        <span>Farmasi IKN 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminView" class="hidden pb-16">
+    <!-- Top Bar -->
+    <nav class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow">
+            <i class="fa-solid fa-staff-snake text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-extrabold leading-tight">Panel Kemas Kini Inden</h1>
+            <p id="userEmail" class="text-[11px] text-slate-500 dark:text-slate-400">Disambung</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="./index.html" target="_blank"
+            class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold">
+            <i class="fa-solid fa-tv mr-1.5 text-brand-600"></i><span class="hidden sm:inline">Buka Paparan</span>
+          </a>
+          <button type="button" onclick="resetDailyStatuses()"
+            class="px-3 py-2 rounded-xl bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 hover:opacity-90 text-xs font-semibold"
+            title="Set semula semua status untuk syif pagi">
+            <i class="fa-solid fa-rotate-left mr-1.5"></i><span class="hidden sm:inline">Reset Harian</span>
+          </button>
+          <button type="button" onclick="toggleTheme()"
+            class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs" aria-label="Toggle dark mode">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+          </button>
+          <button type="button" onclick="logout()"
+            class="px-3 py-2 rounded-xl bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300 hover:opacity-90 text-xs font-semibold">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i><span class="hidden sm:inline">Keluar</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Controls & Quick Filters -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 space-y-5">
+      <div class="flex flex-col md:flex-row gap-3 justify-between">
+        <div class="relative flex-1 max-w-md">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input id="searchInput" type="search" placeholder="Cari kod wad atau nama unit (cth: W5A, ICU, IPC)..."
+            class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm outline-none focus:ring-2 focus:ring-brand-600">
+        </div>
+
+        <div class="flex flex-wrap gap-2" id="filterGroup">
+          <button data-filter="all" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white">Semua (<span id="countAll">0</span>)</button>
+          <button data-filter="active" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">Aktif / Diproses (<span id="countActive">0</span>)</button>
+          <button data-filter="ready" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-emerald-600">Sedia Diambil (<span id="countReady">0</span>)</button>
+          <button data-filter="trolley" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-amber-600">Perlu Troli (<span id="countTrolley">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- Units Grid -->
+      <div id="unitsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900 text-white dark:bg-emerald-700 text-xs font-semibold shadow-2xl">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg">Disimpan</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // SUPABASE CONFIGURATION — PASTE YOUR CREDENTIALS BELOW
+    // =========================================================================
+    const SUPABASE_URL = 'https://cywbgzdrgbefrlmpxtlc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_nRcjOEPp3emGqkEsBqXOMA_QayH9zIO';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // =========================================================================
+
+    const UNIT_NAMES = {
+      ADM: 'UNIT HASIL',
+      BOT: 'UNIT BRAKITERAPI',
+      'CDR/TPN': 'REKONSTITUSI UBAT SITOTOKSIK & UNIT NUTRISI PARENTERAL',
+      CSSD: 'UNIT BEKALAN BAHAN STERIL',
+      DCO: 'RAWATAN HARIAN ONKOLOGI',
+      DIET: 'DIETETIK DAN SAJIAN',
+      ED: 'UNIT KECEMASAN KANSER',
+      GOT: 'DEWAN BEDAH AM',
+      HNU: 'RAWATAN KANSER DI RUMAH',
+      ICU: 'UNIT RAWATAN RAPI',
+      IFS: 'UNIT KAWALAN INFEKSI',
+      IPC: 'FARMASI PESAKIT DALAM',
+      MDC: 'KLINIK MULTIDISIPLIN',
+      MOR: 'UNIT MORTUARI/FORENSIK',
+      NM189: 'PERUBATAN NUKLEAR',
+      NMC: 'KLINIK PERUBATAN NUKLEAR',
+      ONC: 'KLINIK ONKOLOGI',
+      OPC: 'FARMASI PESAKIT LUAR',
+      PAT: 'PATOLOGI',
+      'PETCT(F)': 'PETCT (FARMASI)',
+      'PETCT(N)': 'PETCT (KEJURURAWATAN)',
+      PHY: 'FISIOLOGI',
+      PPD: 'PUSAT PENGAMBILAN DARAH',
+      RADIO: 'RADIOLOGI',
+      RKD: 'JABATAN REKOD',
+      RTC: 'KLINIK RADIOTERAPI',
+      RTT: 'RAWATAN RADIOTERAPI',
+      TCM: 'PERUBATAN TRADISIONAL CINA & KOMPLIMENTARI',
+      UKA: 'UNIT KESIHATAN AWAM',
+      W5A: 'WAD 5A (LELAKI)',
+      W6A: 'WAD PEMBEDAHAN 6A',
+      W6B: 'WAD RADIOTERAPI DAN ONKOLOGI 6B',
+      W7A: 'WAD RADIOTERAPI & ONKOLOGI 7A',
+      W7B: 'WAD RADIOTERAPI & ONKOLOGI 7B',
+      W8A: 'WAD RADIOTERAPI DAN ONKOLOGI 8A',
+      W8B: 'WAD RADIOTERAPI DAN ONKOLOGI 8B',
+      W9A: 'WAD MULTIDISIPLIN 9A',
+      W9B: 'WAD EKSEKUTIF 9B',
+      WRR: 'WAD RADIONUKLID'
+    };
+
+    const STATUS_OPTIONS = [
+      { value: 'Tidak Aktif', label: 'Tidak Aktif' },
+      { value: 'Belum Diterima', label: 'Belum Diterima' },
+      { value: 'Inden Baru Diterima', label: 'Baru Diterima' },
+      { value: 'Inden Sedang Diproses', label: 'Sedang Diproses' },
+      { value: 'Inden Sedia Diambil', label: 'Sedia Diambil' }
+    ];
+
+    let units = [];
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+
+    function showToast(msg, isError = false) {
+      const toast = $('toast');
+      $('toastMsg').textContent = msg;
+      $('toastIcon').className = isError
+        ? 'fa-solid fa-triangle-exclamation text-red-400'
+        : 'fa-solid fa-circle-check text-emerald-400';
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3000);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('statufl_theme', isDark ? 'dark' : 'light');
+    }
+
+    // AUTHENTICATION
+    async function initAuth() {
+      const { data: { session } } = await db.auth.getSession();
+      handleSession(session);
+      db.auth.onAuthStateChange((_event, session) => handleSession(session));
+    }
+
+    function handleSession(session) {
+      if (session) {
+        $('loginView').classList.add('hidden');
+        $('adminView').classList.remove('hidden');
+        $('userEmail').textContent = session.user.email;
+        fetchUnits();
+        subscribeRealtime();
+      } else {
+        $('adminView').classList.add('hidden');
+        $('loginView').classList.remove('hidden');
+      }
+    }
+
+    $('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      $('loginError').classList.add('hidden');
+      $('loginBtn').disabled = true;
+      $('loginBtn').textContent = 'Sedang log masuk...';
+
+      const { error } = await db.auth.signInWithPassword({
+        email: $('email').value.trim(),
+        password: $('password').value
+      });
+
+      $('loginBtn').disabled = false;
+      $('loginBtn').textContent = 'Log Masuk';
+
+      if (error) {
+        $('loginError').textContent = 'Log masuk gagal: ' + error.message;
+        $('loginError').classList.remove('hidden');
+      }
+    });
+
+    async function logout() {
+      await db.auth.signOut();
+    }
+
+    // DATA FETCHING & REALTIME
+    async function fetchUnits() {
+      const { data, error } = await db
+        .from('unit_status')
+        .select('*')
+        .order('unit', { ascending: true });
+
+      if (error) {
+        showToast('Ralat memuat data: ' + error.message, true);
+        return;
+      }
+      units = data || [];
+      updateCounts();
+      renderUnits();
+    }
+
+    let realtimeSubscribed = false;
+    function subscribeRealtime() {
+      if (realtimeSubscribed) return;
+      realtimeSubscribed = true;
+      db.channel('admin-unit-status')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'unit_status' }, () => {
+          fetchUnits();
+        })
+        .subscribe();
+    }
+
+    function updateCounts() {
+      $('countAll').textContent = units.length;
+      $('countActive').textContent = units.filter(u =>
+        ['Inden Baru Diterima', 'Inden Sedang Diproses'].includes(u.drip) ||
+        ['Inden Baru Diterima', 'Inden Sedang Diproses'].includes(u.bukan_ubat)
+      ).length;
+      $('countReady').textContent = units.filter(u =>
+        u.drip === 'Inden Sedia Diambil' || u.bukan_ubat === 'Inden Sedia Diambil'
+      ).length;
+      $('countTrolley').textContent = units.filter(u =>
+        String(u.perlu_troli).toLowerCase() === 'yes'
+      ).length;
+    }
+
+    function statusSelectColor(val) {
+      if (val === 'Inden Sedia Diambil') return 'border-emerald-500 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300';
+      if (val === 'Inden Sedang Diproses') return 'border-amber-500 bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300';
+      if (val === 'Inden Baru Diterima') return 'border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300';
+      if (val === 'Belum Diterima') return 'border-slate-300 dark:border-slate-700';
+      return 'border-slate-200 dark:border-slate-800 opacity-75';
+    }
+
+    function renderUnits() {
+      const q = searchQuery.toLowerCase().trim();
+      const filtered = units.filter(u => {
+        const name = (UNIT_NAMES[u.unit] || '').toLowerCase();
+        const matchesQuery = !q || u.unit.toLowerCase().includes(q) || name.includes(q);
+        if (!matchesQuery) return false;
+
+        if (currentFilter === 'ready') return u.drip === 'Inden Sedia Diambil' || u.bukan_ubat === 'Inden Sedia Diambil';
+        if (currentFilter === 'active') return ['Inden Baru Diterima', 'Inden Sedang Diproses'].includes(u.drip) || ['Inden Baru Diterima', 'Inden Sedang Diproses'].includes(u.bukan_ubat);
+        if (currentFilter === 'trolley') return String(u.perlu_troli).toLowerCase() === 'yes';
+        return true;
+      });
+
+      $('unitsGrid').innerHTML = filtered.map(u => {
+        const isReady = u.drip === 'Inden Sedia Diambil' || u.bukan_ubat === 'Inden Sedia Diambil';
+        const isUrgent = u.priority === 'High' || String(u.direct_issue).toLowerCase() === 'yes';
+        const urgencyVal = u.priority === 'High' ? 'high' : (String(u.direct_issue).toLowerCase() === 'yes' ? 'direct' : 'normal');
+
+        return `
+        <div data-card="${esc(u.unit)}" class="bg-white dark:bg-slate-900 border-2 ${isReady ? 'border-emerald-500' : isUrgent ? 'border-red-500' : 'border-slate-200 dark:border-slate-800'} rounded-2xl p-4 shadow-sm space-y-3.5 transition">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-mono font-bold text-sm shrink-0">${esc(u.unit)}</span>
+              <div class="min-w-0">
+                <h2 class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate" title="${esc(UNIT_NAMES[u.unit] || u.unit)}">${esc(UNIT_NAMES[u.unit] || u.unit)}</h2>
+                <span class="text-[10px] text-slate-400">Kemas kini: ${u.updated_at ? new Date(u.updated_at).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }) : '-'}</span>
+              </div>
+            </div>
+            ${isReady ? '<span class="px-2 py-0.5 rounded bg-emerald-500 text-white text-[10px] font-extrabold shrink-0">SEDIA</span>' : ''}
+          </div>
+
+          <!-- Drip & Bukan Ubat Dropdowns -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1"><i class="fa-solid fa-pills mr-1"></i>Inden Drip</label>
+              <select data-field="drip" class="w-full px-2.5 py-2 rounded-xl border-2 text-xs font-bold outline-none ${statusSelectColor(u.drip)}">
+                ${STATUS_OPTIONS.map(opt => `<option value="${opt.value}" ${u.drip === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1"><i class="fa-solid fa-syringe mr-1"></i>Bukan Ubat</label>
+              <select data-field="bukan_ubat" class="w-full px-2.5 py-2 rounded-xl border-2 text-xs font-bold outline-none ${statusSelectColor(u.bukan_ubat)}">
+                ${STATUS_OPTIONS.map(opt => `<option value="${opt.value}" ${u.bukan_ubat === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <!-- Trolley & Priority Row -->
+          <div class="grid grid-cols-3 gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Kuantiti Troli</label>
+              <div class="flex items-center">
+                <button type="button" data-step="-1" class="w-7 h-8 rounded-l-lg bg-slate-100 dark:bg-slate-800 font-bold text-xs hover:bg-slate-200">-</button>
+                <input data-field="jumlah_troli" type="number" min="0" max="99" value="${Number(u.jumlah_troli) || 0}"
+                  class="w-full h-8 text-center border-y border-slate-200 dark:border-slate-700 bg-transparent text-xs font-bold">
+                <button type="button" data-step="1" class="w-7 h-8 rounded-r-lg bg-slate-100 dark:bg-slate-800 font-bold text-xs hover:bg-slate-200">+</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Perlu Troli?</label>
+              <select data-field="perlu_troli" class="w-full h-8 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold">
+                <option value="No" ${String(u.perlu_troli).toLowerCase() !== 'yes' ? 'selected' : ''}>Tidak</option>
+                <option value="Yes" ${String(u.perlu_troli).toLowerCase() === 'yes' ? 'selected' : ''}>Ya</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Keutamaan</label>
+              <select data-field="urgency" class="w-full h-8 px-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold">
+                <option value="normal" ${urgencyVal === 'normal' ? 'selected' : ''}>Normal</option>
+                <option value="high" ${urgencyVal === 'high' ? 'selected' : ''}>Tinggi</option>
+                <option value="direct" ${urgencyVal === 'direct' ? 'selected' : ''}>Keluaran Terus</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <button type="button" data-save="${esc(u.unit)}"
+            class="save-btn w-full py-2 px-3 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-brand-600 dark:hover:bg-brand-600 text-white text-xs font-bold transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Simpan Perubahan</span>
+          </button>
+        </div>`;
+      }).join('');
+    }
+
+    // EVENT DELEGATION FOR CARDS
+    $('unitsGrid').addEventListener('change', e => {
+      const card = e.target.closest('[data-card]');
+      if (!card) return;
+      const btn = card.querySelector('.save-btn');
+      btn.classList.remove('bg-slate-900', 'dark:bg-slate-800', 'bg-emerald-600');
+      btn.classList.add('bg-brand-600', 'ring-2', 'ring-brand-500/40');
+      btn.querySelector('span').textContent = 'Simpan Perubahan *';
+    });
+
+    $('unitsGrid').addEventListener('click', async e => {
+      const card = e.target.closest('[data-card]');
+      if (!card) return;
+
+      // Stepper +/- buttons for trolley quantity
+      const stepBtn = e.target.closest('[data-step]');
+      if (stepBtn) {
+        const input = card.querySelector('[data-field="jumlah_troli"]');
+        const nextVal = Math.max(0, (Number(input.value) || 0) + Number(stepBtn.dataset.step));
+        input.value = nextVal;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
+      }
+
+      // Save button
+      const saveBtn = e.target.closest('[data-save]');
+      if (saveBtn) {
+        const unitCode = saveBtn.dataset.save;
+        const drip = card.querySelector('[data-field="drip"]').value;
+        const bukan_ubat = card.querySelector('[data-field="bukan_ubat"]').value;
+        const jumlah_troli = Math.max(0, Number(card.querySelector('[data-field="jumlah_troli"]').value) || 0);
+        const perlu_troli = card.querySelector('[data-field="perlu_troli"]').value;
+        const urgency = card.querySelector('[data-field="urgency"]').value;
+
+        const priority = urgency === 'high' ? 'High' : '';
+        const direct_issue = urgency === 'direct' ? 'Yes' : '';
+
+        saveBtn.disabled = true;
+        saveBtn.querySelector('span').textContent = 'Menyimpan...';
+
+        const { error } = await db
+          .from('unit_status')
+          .update({
+            drip,
+            bukan_ubat,
+            jumlah_troli,
+            perlu_troli,
+            priority,
+            direct_issue,
+            updated_at: new Date().toISOString()
+          })
+          .eq('unit', unitCode);
+
+        saveBtn.disabled = false;
+
+        if (error) {
+          showToast(`Gagal simpan ${unitCode}: ${error.message}`, true);
+          saveBtn.querySelector('span').textContent = 'Cuba Lagi';
+        } else {
+          showToast(`${unitCode} berjaya dikemas kini!`);
+          saveBtn.classList.remove('bg-brand-600', 'ring-2', 'ring-brand-500/40');
+          saveBtn.classList.add('bg-emerald-600');
+          saveBtn.querySelector('span').textContent = 'Tersimpan ✓';
+        }
+      }
+    });
+
+    // DAILY SHIFT RESET
+    async function resetDailyStatuses() {
+      if (!confirm('Set semula semua status unit kepada "Belum Diterima" dan troli kepada 0 untuk hari baru?')) return;
+
+      for (const u of units) {
+        const nextDrip = u.drip === 'Tidak Aktif' ? 'Tidak Aktif' : 'Belum Diterima';
+        await db
+          .from('unit_status')
+          .update({
+            drip: nextDrip,
+            bukan_ubat: 'Belum Diterima',
+            jumlah_troli: 0,
+            perlu_troli: 'No',
+            priority: '',
+            direct_issue: '',
+            updated_at: new Date().toISOString()
+          })
+          .eq('unit', u.unit);
+      }
+      showToast('Semua unit telah ditetapkan semula.');
+      fetchUnits();
+    }
+
+    // SEARCH & FILTER LISTENERS
+    $('searchInput').addEventListener('input', e => {
+      searchQuery = e.target.value;
+      renderUnits();
+    });
+
+    $('filterGroup').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      currentFilter = btn.dataset.filter;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('bg-brand-600', 'text-white');
+        b.classList.add('bg-white', 'dark:bg-slate-900', 'border', 'border-slate-200', 'dark:border-slate-800');
+      });
+      btn.classList.add('bg-brand-600', 'text-white');
+      btn.classList.remove('bg-white', 'dark:bg-slate-900', 'border', 'border-slate-200', 'dark:border-slate-800');
+      renderUnits();
+    });
+
+    initAuth();
+  </script>
+</body>
+</html>
