@@ -110,10 +110,19 @@
     <!-- Controls & Quick Filters -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 space-y-5">
       <div class="flex flex-col md:flex-row gap-3 justify-between">
-        <div class="relative flex-1 max-w-md">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input id="searchInput" type="search" placeholder="Cari kod wad atau nama unit (cth: W5A, ICU, IPC)..."
-            class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm outline-none focus:ring-2 focus:ring-brand-600">
+        <!-- Search Input + Allstat Broadcast Button -->
+        <div class="flex items-center gap-2 flex-1 max-w-xl">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input id="searchInput" type="search" placeholder="Cari kod wad atau nama unit (cth: W5A, ICU, IPC)..."
+              class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm outline-none focus:ring-2 focus:ring-brand-600">
+          </div>
+          <button type="button" id="allstatBtn" onclick="sendAllstatBroadcast()"
+            class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-sm transition flex items-center gap-1.5 shrink-0"
+            title="Hantar ringkasan notifikasi status semasa kepada semua pengguna">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Allstat</span>
+          </button>
         </div>
 
         <div class="flex flex-wrap gap-2" id="filterGroup">
@@ -550,6 +559,84 @@
       await Promise.all(updates);
       showToast('Semua unit telah ditetapkan semula.');
       fetchUnits();
+    }
+
+    // =========================================================================
+    // ALLSTAT BROADCAST (NATIVE SMARTPHONE FORMATTING)
+    // =========================================================================
+    function buildAllstatMessage() {
+      const dripReady = units
+        .filter(u => u.drip === 'Inden Sedia Diambil')
+        .map(u => u.unit);
+
+      const bukanUbatReady = units
+        .filter(u => u.bukan_ubat === 'Inden Sedia Diambil')
+        .map(u => u.unit);
+
+      const trolleyReady = units
+        .filter(u =>
+          (u.drip === 'Inden Sedia Diambil' || u.bukan_ubat === 'Inden Sedia Diambil') &&
+          Number(u.jumlah_troli) > 0
+        )
+        .map(u => `${u.unit}-${Number(u.jumlah_troli)}`);
+
+      const hantarTroli = units
+        .filter(u => ['yes', 'ya'].includes(String(u.perlu_troli).toLowerCase()))
+        .map(u => u.unit);
+
+      const timeNow = new Date().toLocaleTimeString('ms-MY', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const title = `📢 STATUFL • Ringkasan Status (${timeNow})`;
+      const body = [
+        `💧 Inden DRIP SEDIA DIAMBIL:`,
+        dripReady.length ? dripReady.join(', ') : 'Tiada',
+        ``,
+        `🩹 Inden BUKAN UBAT SEDIA DIAMBIL:`,
+        bukanUbatReady.length ? bukanUbatReady.join(', ') : 'Tiada',
+        ``,
+        `🛒 Jumlah troli INDEN SEDIA DIAMBIL:`,
+        trolleyReady.length ? trolleyReady.join(', ') : 'Tiada',
+        ``,
+        `💨 Mohon HANTAR TROLI ke stor:`,
+        hantarTroli.length ? hantarTroli.join(', ') : 'Tiada',
+        ``,
+        `🔗 https://go.gov.my/statufl`
+      ].join('\n');
+
+      return { title, body };
+    }
+
+    async function sendAllstatBroadcast() {
+      const btn = $('allstatBtn');
+      const { title, body } = buildAllstatMessage();
+
+      if (!confirm(`Hantar notifikasi Allstat ini kepada semua pengguna?\n\n${body}`)) {
+        return;
+      }
+
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Menghantar...';
+
+      const { data: { session } } = await db.auth.getSession();
+      const { error } = await db
+        .from('allstat_broadcasts')
+        .insert([{
+          title,
+          body,
+          created_by: session?.user?.email || 'farmasi'
+        }]);
+
+      btn.disabled = false;
+      btn.querySelector('span').textContent = 'Allstat';
+
+      if (error) {
+        showToast('Gagal hantar Allstat: ' + error.message, true);
+      } else {
+        showToast('Notifikasi Allstat berjaya dihantar ke semua peranti!');
+      }
     }
 
     // SEARCH & FILTER LISTENERS
