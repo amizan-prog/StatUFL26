@@ -2677,19 +2677,6 @@ h3 {
         </button>`;
       document.body.appendChild(bar);
 
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'control';
-      button.id = 'unitCardFullscreenButton';
-      button.title = 'Show unit card fullscreen';
-      button.setAttribute('aria-label', 'Show unit card fullscreen');
-      button.innerHTML = '<i class="fa-solid fa-expand" aria-hidden="true"></i><span class="hidden sm:inline">Fullscreen</span>';
-      const settingsButton = document.querySelector('[onclick="openSettings()"]');
-      const navigationControls = settingsButton?.parentElement;
-      if (navigationControls && !document.getElementById('unitCardFullscreenButton')) {
-        navigationControls.insertBefore(button, settingsButton);
-      }
-
       let hideTimer;
       const showBar = () => {
         if (!body.classList.contains('unit-card-fullscreen')) return;
@@ -2701,14 +2688,10 @@ h3 {
       const setFullscreen = enabled => {
         body.classList.toggle('unit-card-fullscreen', enabled);
         bar.classList.toggle('is-hidden', !enabled);
-        button.innerHTML = enabled
-          ? '<i class="fa-solid fa-compress"></i><span class="hidden sm:inline">Exit fullscreen</span>'
-          : '<i class="fa-solid fa-expand" aria-hidden="true"></i><span class="hidden sm:inline">Fullscreen</span>';
         if (enabled) showBar();
         else clearTimeout(hideTimer);
       };
 
-      button.addEventListener('click', () => setFullscreen(!body.classList.contains('unit-card-fullscreen')));
       bar.querySelector('button').addEventListener('click', () => setFullscreen(false));
       document.addEventListener('mousemove', showBar, { passive: true });
       document.addEventListener('touchstart', showBar, { passive: true });
@@ -2716,45 +2699,6 @@ h3 {
         if (event.key === 'Escape' && body.classList.contains('unit-card-fullscreen')) setFullscreen(false);
       });
     })();
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (document.getElementById('fullscreenToggleButton')) return;
-      const fullscreenToggle = document.createElement('button');
-      fullscreenToggle.type = 'button';
-      fullscreenToggle.id = 'fullscreenToggleButton';
-      fullscreenToggle.innerHTML = '<i class="fa-solid fa-expand" aria-hidden="true"></i>';
-      document.body.appendChild(fullscreenToggle);
-
-      fullscreenToggle.addEventListener('click', event => {
-        event.preventDefault();
-        event.stopPropagation();
-        document.body.classList.remove('unit-card-fullscreen');
-      });
-    });
-
-    document.addEventListener('dblclick', event => {
-      const card = event.target.closest('.status-card');
-      if (!card || event.target.closest('button, input, select, a, label')) return;
-      event.preventDefault();
-
-      if (document.body.classList.contains('unit-card-fullscreen')) {
-        document.body.classList.remove('unit-card-fullscreen');
-        return;
-      }
-
-      if (!document.body.classList.contains('ward-pinned')) {
-        const unitCode = card.dataset.unit;
-        if (!unitCode) return;
-        pinnedWard = unitCode;
-        localStorage.setItem('statufl_pinned_ward', unitCode);
-        localStorage.setItem('statufl_first_unit_confirmed', 'yes');
-        window.location.reload();
-        return;
-      }
-
-      document.body.classList.toggle('unit-card-fullscreen');
-    });
   </script>
 
   <script>
