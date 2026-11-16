@@ -180,11 +180,12 @@ h3 {
 
     /* Extra-large Kuantiti Troli number when a ward is pinned */
     .ward-pinned .trolley-row {
-      font-size: clamp(1.1rem, 2vw, 1.75rem);
+      padding: clamp(0.65rem, 1.5vw, 1.25rem) clamp(0.85rem, 2vw, 1.5rem);
+      font-size: clamp(1rem, 1.8vw, 1.65rem);
     }
 
     .ward-pinned .trolley-count {
-      font-size: clamp(4rem, 8vw, 7rem);
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
     }
   </style>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -1111,7 +1112,7 @@ h3 {
           urgent = isUrgent(u),
           urgentLabel = u.priority && String(u.priority).toLowerCase() === 'high' ? t.highPriority : t.directIssueBadge,
           confirmLabel = lang === 'bm' ? 'Sahkan Telah Diambil' : 'Confirm Collected';
-        return `<article data-unit="${esc(u.unit)}" class="status-card ${urgent ? 'urgent-card' : ''} ${readyPulseCodes.has(u.unit) ? 'ready-pulse' : ''} ${tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima' ? 'new-indent-card' : ''} group relative border-4 ${u.ready ? 'card-ready-glow border-emerald-500' : 'border-slate-200 dark:border-slate-800'} rounded-[var(--radius)] p-5 cursor-pointer" onclick="speakUnit(this,'${esc(u.unit)}')"><div class="flex items-start justify-between gap-3 mb-4"><div class="flex items-center gap-3 min-w-0"><div class="ward-code w-12 h-12 rounded-2xl bg-[var(--color-primary)] text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-md">${esc(u.unit)}</div><div class="min-w-0"><div class="flex flex-col items-start gap-1"><h2 class="text-xs font-semibold text-[var(--color-muted)] truncate ward-name">${esc(label(u.unit))}</h2>${urgent?`<span class="urgent-badge ${String(u.priority).toLowerCase() === 'high' ? 'urgent-high' : 'urgent-direct'}" title="${esc(urgentLabel)}"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${esc(urgentLabel)}</span>`:''}</div><div class="text-[10px] text-[var(--color-muted)] mt-0.5">${esc(u.unit)} ${u.ready?`<span class="ready-badge px-2 py-0.5 rounded bg-emerald-500 text-white font-bold"><span class="ready-flash">&#9889;</span> ${t.readyBadge}</span>`:''}${elapsed?`<span data-elapsed-unit="${esc(u.unit)}" class="elapsed-status block">${esc(elapsed)}</span>`:''}</div></div></div><button type="button" class="speaker-btn w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0" aria-label="${esc(label(u.unit))} - ${esc(t.tapForAudio)}" onclick="event.stopPropagation(); speakUnit(this.closest('.status-card'),'${esc(u.unit)}')"><i class="fa-solid fa-volume-high"></i></button></div><div><div class="rounded-xl border-4 border-slate-200 dark:border-slate-800 p-3 space-y-3 bg-[var(--color-bg)]/60"><div class="grid grid-cols-2 gap-2.5">${box(t.drip,'fa-pills',d)}${box(t.consumables,'fa-box-open',b)}</div>${!(tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima') ? `<div class="trolley-row flex items-center justify-between font-bold rounded-lg bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 ${Number(u.jumlahTroli) <= 0 ? 'trolley-empty' : ''}"><span>${t.trolleyQuantity}</span><b class="trolley-count font-extrabold leading-none">${u.jumlahTroli}</b></div>` : ''}${needs(u)?`<div class="exception-badge trolley-required"><i class="fa-solid fa-truck-ramp-box mr-2"></i>${lang === 'bm' ? 'Troli Diperlukan' : 'Trolley Required'}</div>`:''}${urgent && u.directIssue && ['ya','yes'].includes(tr(u.directIssue))?`<div class="exception-badge urgent-issue"><i class="fa-solid fa-siren-on mr-2"></i>${lang === 'bm' ? 'ISU SEGERA' : 'URGENT ISSUE'}</div>`:''}${u.ready && pinnedWard === u.unit ? `<button type="button" onclick="confirmWardCollection('${esc(u.unit)}')" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition" aria-label="${confirmLabel}"><i class="fa-solid fa-clipboard-check"></i>${confirmLabel}</button>` : ''}</div></div></article>`
+        return `<article data-unit="${esc(u.unit)}" class="status-card ${urgent ? 'urgent-card' : ''} ${readyPulseCodes.has(u.unit) ? 'ready-pulse' : ''} ${tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima' ? 'new-indent-card' : ''} group relative border-4 ${u.ready ? 'card-ready-glow border-emerald-500' : 'border-slate-200 dark:border-slate-800'} rounded-[var(--radius)] p-5 cursor-pointer" onclick="speakUnit(this,'${esc(u.unit)}')"><div class="flex items-start justify-between gap-3 mb-4"><div class="flex items-center gap-3 min-w-0"><div class="ward-code w-12 h-12 rounded-2xl bg-[var(--color-primary)] text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-md">${esc(u.unit)}</div><div class="min-w-0"><div class="flex flex-col items-start gap-1"><h2 class="text-xs font-semibold text-[var(--color-muted)] truncate ward-name">${esc(label(u.unit))}</h2>${urgent?`<span class="urgent-badge ${String(u.priority).toLowerCase() === 'high' ? 'urgent-high' : 'urgent-direct'}" title="${esc(urgentLabel)}"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${esc(urgentLabel)}</span>`:''}</div><div class="text-[10px] text-[var(--color-muted)] mt-0.5">${esc(u.unit)} ${u.ready?`<span class="ready-badge px-2 py-0.5 rounded bg-emerald-500 text-white font-bold"><span class="ready-flash">&#9889;</span> ${t.readyBadge}</span>`:''}${elapsed?`<span data-elapsed-unit="${esc(u.unit)}" class="elapsed-status block">${esc(elapsed)}</span>`:''}</div></div></div><button type="button" class="speaker-btn w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0" aria-label="${esc(label(u.unit))} - ${esc(t.tapForAudio)}" onclick="event.stopPropagation(); speakUnit(this.closest('.status-card'),'${esc(u.unit)}')"><i class="fa-solid fa-volume-high"></i></button></div><div><div class="rounded-xl border-4 border-slate-200 dark:border-slate-800 p-3 space-y-3 bg-[var(--color-bg)]/60"><div class="inden-status-grid grid grid-cols-2 gap-2.5">${box(t.drip,'fa-pills',d)}${box(t.consumables,'fa-box-open',b)}</div>${!(tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima') ? `<div class="trolley-row flex items-center justify-between font-bold rounded-lg bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 ${Number(u.jumlahTroli) <= 0 ? 'trolley-empty' : ''}"><span>${t.trolleyQuantity}</span><b class="trolley-count font-extrabold leading-none">${u.jumlahTroli}</b></div>` : ''}${needs(u)?`<div class="exception-badge trolley-required"><i class="fa-solid fa-truck-ramp-box mr-2"></i>${lang === 'bm' ? 'Troli Diperlukan' : 'Trolley Required'}</div>`:''}${urgent && u.directIssue && ['ya','yes'].includes(tr(u.directIssue))?`<div class="exception-badge urgent-issue"><i class="fa-solid fa-siren-on mr-2"></i>${lang === 'bm' ? 'ISU SEGERA' : 'URGENT ISSUE'}</div>`:''}${u.ready && pinnedWard === u.unit ? `<button type="button" onclick="confirmWardCollection('${esc(u.unit)}')" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition" aria-label="${confirmLabel}"><i class="fa-solid fa-clipboard-check"></i>${confirmLabel}</button>` : ''}</div></div></article>`
       }).join('') : `<div class="col-span-full text-center py-16 text-[var(--color-muted)]"><i class="fa-solid fa-magnifying-glass text-3xl mb-3"></i><p>${t.none}</p></div>`;
       $('pages').innerHTML = totalPages > 1 ? Array.from({
         length: totalPages
@@ -2576,20 +2577,13 @@ h3 {
     .status-card .speaker-btn { opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease; }
     .status-card:hover .speaker-btn, .status-card:focus-within .speaker-btn, .status-card .speaker-btn:focus-visible { opacity: 1; visibility: visible; }
     .wall-grid { grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: clamp(0.5rem, 1vw, 0.9rem); align-items: stretch; }
-    .ward-pinned #grid { width: 100%; max-width: none; grid-template-columns: minmax(0, 1fr); gap: 1rem; height: clamp(22rem, calc(100dvh - 18rem), 58rem); overflow: hidden; }
-    .ward-pinned #grid .status-card { height: 100%; display: flex; flex-direction: column; overflow: hidden; padding: clamp(0.75rem, 2vw, 2rem); }
-    .ward-pinned #grid .status-card > div:last-child { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
-    .ward-pinned #grid .status-card > div:last-child > .rounded-xl { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
-    .ward-pinned #grid .status-card > div:last-child > .rounded-xl > .grid { flex: 1 1 auto; min-height: 0; }
-    .ward-pinned #grid .status-card .rag-tile { height: 100%; min-height: 0; }
-    .ward-pinned footer { display: none; }
-    .unit-card-fullscreen { overflow: hidden; }
+    .unit-card-fullscreen { overflow-x: hidden; overflow-y: auto; }
     .unit-card-fullscreen > nav, .unit-card-fullscreen > header, .unit-card-fullscreen > main > :not(#grid), .unit-card-fullscreen > footer,
     .unit-card-fullscreen > #notificationsPanel, .unit-card-fullscreen > #changeToast, .unit-card-fullscreen > #unitPickerModal,
     .unit-card-fullscreen > #voiceConsentModal, .unit-card-fullscreen > #modal { display: none !important; }
     .unit-card-fullscreen > main { display: block; width: 100%; max-width: none; min-height: 100svh; padding: 0; }
-    .unit-card-fullscreen #grid { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; height: 100svh; margin: 0; padding: 4.5rem 1rem 1rem; overflow: hidden; }
-    .unit-card-fullscreen #grid .status-card { display: flex; width: 100%; height: 100%; margin: 0; padding: clamp(1rem, 3vw, 3rem); flex-direction: column; overflow: hidden; }
+    .unit-card-fullscreen #grid { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; min-height: 100svh; height: auto; margin: 0; padding: 4.5rem clamp(0.75rem, 2.5vw, 2rem) clamp(1rem, 2.5vw, 2rem); overflow: visible; }
+    .unit-card-fullscreen #grid .status-card { display: flex; justify-content: space-between; width: 100%; max-width: 80rem; margin-inline: auto; min-height: calc(100svh - 6rem); height: auto; padding: clamp(1rem, 3vw, 2.75rem); flex-direction: column; overflow: visible; }
     .unit-card-fullscreen #grid .status-card .speaker-btn { opacity: 1; visibility: visible; }
     .statufl-fullscreen-bar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between;
@@ -2631,6 +2625,103 @@ h3 {
       .status-card > div:last-child > .rounded-xl.border-4 .rag-tile span:last-child { font-size: clamp(1.25rem, 2vw, 2rem) !important; }
       .status-card > div:last-child > .rounded-xl.border-4 > .rounded-lg > .flex > b { font-size: clamp(3.75rem, 6vw, 6rem); }
     }
+
+    /* Proportional Pinned Ward Card across all devices */
+    .ward-pinned #grid {
+      width: 100%;
+      max-width: 76rem;
+      margin-inline: auto;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+      height: auto;
+      min-height: clamp(22rem, calc(100dvh - 19rem), 52rem);
+      overflow: visible;
+    }
+    .ward-pinned #grid .status-card {
+      height: auto;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: visible;
+      padding: clamp(1rem, 2.5vw, 2.25rem);
+    }
+    .ward-pinned #grid .status-card:hover {
+      transform: translateY(-4px);
+    }
+    .ward-pinned #grid .status-card .speaker-btn {
+      opacity: 1;
+      visibility: visible;
+    }
+    .ward-pinned #grid .ward-code {
+      width: clamp(3.5rem, 6vw, 5.25rem);
+      height: clamp(3.5rem, 6vw, 5.25rem);
+      font-size: clamp(1rem, 2vw, 1.6rem);
+    }
+    .ward-pinned #grid .ward-name {
+      font-size: clamp(0.95rem, 1.8vw, 1.45rem);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .ward-pinned #grid .status-card > div:last-child {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .ward-pinned #grid .status-card > div:last-child > .rounded-xl {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(0.75rem, 1.8vw, 1.25rem);
+      padding: clamp(0.875rem, 2vw, 1.5rem);
+      min-height: 0;
+    }
+    .ward-pinned #grid .inden-status-grid {
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(0.75rem, 2vw, 1.5rem);
+      min-height: 0;
+    }
+    @media (max-width: 420px) {
+      .ward-pinned #grid .inden-status-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .ward-pinned #grid .status-card .rag-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(0.65rem, 1.5vw, 1.25rem);
+      height: 100%;
+      min-height: clamp(7.25rem, 17vh, 13.5rem);
+      padding: clamp(0.95rem, 2.2vw, 1.65rem);
+    }
+    .ward-pinned #grid .status-card .rag-label {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: clamp(0.9rem, 1.6vw, 1.45rem) !important;
+      line-height: 1.25;
+    }
+    .ward-pinned #grid .status-card .rag-tile span:last-child {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0 !important;
+      font-size: clamp(1.15rem, 2.3vw, 2.15rem) !important;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .ward-pinned .exception-badge {
+      padding: clamp(0.65rem, 1.4vw, 1rem) clamp(0.85rem, 1.8vw, 1.25rem);
+      font-size: clamp(0.875rem, 1.4vw, 1.15rem);
+    }
+    .ward-pinned footer { display: none; }
   </style>
 
   <footer class="border-t border-[var(--color-alert)]/30 px-4 py-6 text-center text-sm text-[var(--color-alert)]">
