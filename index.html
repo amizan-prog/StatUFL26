@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
   <meta name="description" content="Papan pemuka pemantauan status unit hospital masa nyata">
-  <title>STATUFL • Papan Pemuka Unit</title>
+  <title>STATUFL &bull; Papan Pemuka Unit</title>
   <link rel="stylesheet" href="/theme.css">
   <script>
     function isNightTime() {
@@ -232,7 +232,7 @@ h3 {
         <div class="sync-stamp flex items-end flex-col bg-slate-950/75 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 px-3 sm:px-4 text-white shadow-lg">
           <div data-t="lastUpdated" class="text-[10px] font-bold tracking-wider text-slate-400">KEMAS KINI TERAKHIR</div>
           <div id="updated" class="font-mono font-bold text-sm mt-0.5">Dikemas kini sebentar tadi</div>
-          <div id="connection" data-t="connectedStatus" class="mt-0.5 text-xs text-emerald-400 font-medium">● Disambung</div>
+          <div id="connection" data-t="connectedStatus" class="mt-0.5 text-xs text-emerald-400 font-medium">&#9679; Disambung</div>
         </div>
         <button onclick="openSettings()" title="Tetapan" aria-label="Tetapan" class="control bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border-brand-200"><i class="fa-solid fa-gear"></i><span class="hidden sm:inline" data-t="settings">Tetapan</span></button>
       </div>
@@ -257,7 +257,6 @@ h3 {
       </div>
     </div>
   </header>
-
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6">
     <div class="-mt-8 grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 relative z-10">
       <div class="kpi">
@@ -274,7 +273,7 @@ h3 {
       </div>
       <div class="kpi">
         <div class="flex justify-between"><span id="pageviewsTitle">Jumlah Lawatan Hari Ini</span><i class="fa-solid fa-chart-line text-[var(--color-primary)]"></i></div>
-        <strong id="dailyPageviews" aria-live="polite">—</strong>
+        <strong id="dailyPageviews" aria-live="polite">&mdash;</strong>
         <span id="pageviewCounterStatus" class="block mt-1">Memuatkan kiraan...</span>
       </div>
     </div>
@@ -376,7 +375,7 @@ h3 {
         <div class="rounded-[var(--radius)] border border-[var(--color-warning-border)] bg-[var(--color-warning-surface)] p-3 text-xs text-[var(--color-warning)]">
           <strong class="block text-[var(--color-text)]">Malay voice unavailable?</strong>
           <p class="mt-1">Install a Malay voice pack on your device, then reopen the browser.</p>
-          <p class="mt-2">Android: Settings → System → Text-to-speech. iPhone/iPad: Settings → Accessibility → Spoken Content → Voices. macOS: System Settings → Accessibility → Read &amp; Speak.</p>
+          <p class="mt-2">Android: Settings &rarr; System &rarr; Text-to-speech. iPhone/iPad: Settings &rarr; Accessibility &rarr; Spoken Content &rarr; Voices. macOS: System Settings &rarr; Accessibility &rarr; Read &amp; Speak.</p>
         </div>
         <details class="group rounded-[var(--radius)] border border-slate-200 dark:border-slate-700 bg-[var(--color-bg)] overflow-hidden">
           <summary class="cursor-pointer list-none p-3 text-xs font-bold flex items-center justify-between gap-3">
@@ -386,21 +385,21 @@ h3 {
           <div class="px-3 pb-3 space-y-3 text-[11px] leading-relaxed text-[var(--color-muted)]">
             <div>
               <strong data-t="voiceGuideWindows" class="block text-[var(--color-text)] mb-0.5">Windows 10/11</strong>
-              <span data-t="voiceGuideWindowsText">Tetapan → Masa &amp; bahasa → Bahasa &amp; rantau → Tambah bahasa → cari “Malay (Malaysia)” → Pilihan bahasa → Teks ke pertuturan → Muat turun. Tutup dan buka semula pelayar selepas selesai.</span>
+              <span data-t="voiceGuideWindowsText">Tetapan &rarr; Masa &amp; bahasa &rarr; Bahasa &amp; rantau &rarr; Tambah bahasa &rarr; cari &ldquo;Malay (Malaysia)&rdquo; &rarr; Pilihan bahasa &rarr; Teks ke pertuturan &rarr; Muat turun. Tutup dan buka semula pelayar selepas selesai.</span>
             </div>
             <div>
               <strong data-t="voiceGuideAndroid" class="block text-[var(--color-text)] mb-0.5">Android</strong>
-              <span data-t="voiceGuideAndroidText">Tetapan → Pengurusan umum atau Sistem → Output teks ke pertuturan → Enjin pilihan → pilih Google Speech Services → Pasang data suara → Malay (Malaysia). Nama menu mungkin berbeza mengikut jenama telefon.</span>
+              <span data-t="voiceGuideAndroidText">Tetapan &rarr; Pengurusan umum atau Sistem &rarr; Output teks ke pertuturan &rarr; Enjin pilihan &rarr; pilih Google Speech Services &rarr; Pasang data suara &rarr; Malay (Malaysia). Nama menu mungkin berbeza mengikut jenama telefon.</span>
             </div>
             <div>
               <strong data-t="voiceGuideIphone" class="block text-[var(--color-text)] mb-0.5">iPhone / iPad</strong>
-              <span data-t="voiceGuideIphoneText">Tetapan → Kebolehcapaian → Kandungan Dituturkan → Suara → Malay → pilih dan muat turun suara yang tersedia. Selepas itu, buka semula Safari atau aplikasi.</span>
+              <span data-t="voiceGuideIphoneText">Tetapan &rarr; Kebolehcapaian &rarr; Kandungan Dituturkan &rarr; Suara &rarr; Malay &rarr; pilih dan muat turun suara yang tersedia. Selepas itu, buka semula Safari atau aplikasi.</span>
             </div>
             <div>
               <strong data-t="voiceGuideMac" class="block text-[var(--color-text)] mb-0.5">macOS</strong>
-              <span data-t="voiceGuideMacText">Tetapan Sistem → Kebolehcapaian → Baca &amp; Sebut → Suara sistem → Urus Suara → cari Malay/Malay (Malaysia) → Muat turun. Buka semula pelayar selepas pemasangan.</span>
+              <span data-t="voiceGuideMacText">Tetapan Sistem &rarr; Kebolehcapaian &rarr; Baca &amp; Sebut &rarr; Suara sistem &rarr; Urus Suara &rarr; cari Malay/Malay (Malaysia) &rarr; Muat turun. Buka semula pelayar selepas pemasangan.</span>
             </div>
-            <p data-t="voiceGuideMissing" class="pt-2 border-t border-slate-200 dark:border-slate-700">Jika “Malay”, “ms-MY” atau “Microsoft Rizwan” tidak muncul, sistem operasi atau pelayar anda mungkin tidak menyediakan voice pack tersebut. <a href="ms-settings:regionlanguage" class="text-[var(--color-primary)] underline font-semibold">Buka tetapan Bahasa Windows</a> untuk memasang bahasa dan suara yang tersedia, kemudian tekan Benarkan &amp; Sediakan semula.</p>
+            <p data-t="voiceGuideMissing" class="pt-2 border-t border-slate-200 dark:border-slate-700">Jika &ldquo;Malay&rdquo;, &ldquo;ms-MY&rdquo; atau &ldquo;Microsoft Rizwan&rdquo; tidak muncul, sistem operasi atau pelayar anda mungkin tidak menyediakan voice pack tersebut. <a href="ms-settings:regionlanguage" class="text-[var(--color-primary)] underline font-semibold">Buka tetapan Bahasa Windows</a> untuk memasang bahasa dan suara yang tersedia, kemudian tekan Benarkan &amp; Sediakan semula.</p>
           </div>
         </details>
         <div id="voiceConsentStatus" class="hidden rounded-xl p-3 text-xs font-medium"></div>
@@ -538,7 +537,7 @@ h3 {
     };
     const T = {
       bm: {
-        title: 'STATUFL • Papan Pemuka Unit',
+        title: 'STATUFL &bull; Papan Pemuka Unit',
         heading: 'Status Unit',
         subtitle: 'Pemantauan masa nyata Inden Drip, Bukan Ubat & Troli. Klik mana-mana kad untuk audio status.',
         notifications: 'Notifikasi',
@@ -608,11 +607,11 @@ h3 {
         voiceGuideAndroid: 'Android',
         voiceGuideIphone: 'iPhone / iPad',
         voiceGuideMac: 'macOS',
-        voiceGuideMissing: 'Jika “Malay”, “ms-MY” atau “Microsoft Rizwan” tidak muncul, sistem operasi atau pelayar anda mungkin tidak menyediakan voice pack tersebut. <a href="ms-settings:regionlanguage" class="text-[var(--color-primary)] underline font-semibold">Buka tetapan Bahasa Windows</a> untuk memasang bahasa dan suara yang tersedia, kemudian tekan Benarkan & Sediakan semula.',
-        voiceGuideWindowsText: 'Tetapan → Masa & bahasa → Bahasa & rantau → Tambah bahasa → cari “Malay (Malaysia)” → Pilihan bahasa → Teks ke pertuturan → Muat turun. Tutup dan buka semula pelayar selepas selesai.',
-        voiceGuideAndroidText: 'Tetapan → Pengurusan umum atau Sistem → Output teks ke pertuturan → Enjin pilihan → pilih Google Speech Services → Pasang data suara → Malay (Malaysia). Nama menu mungkin berbeza mengikut jenama telefon.',
-        voiceGuideIphoneText: 'Tetapan → Kebolehcapaian → Kandungan Dituturkan → Suara → Malay → pilih dan muat turun suara yang tersedia. Selepas itu, buka semula Safari atau aplikasi.',
-        voiceGuideMacText: 'Tetapan Sistem → Kebolehcapaian → Baca & Sebut → Suara sistem → Urus Suara → cari Malay/Malay (Malaysia) → Muat turun. Buka semula pelayar selepas pemasangan.',
+        voiceGuideMissing: 'Jika &ldquo;Malay&rdquo;, &ldquo;ms-MY&rdquo; atau &ldquo;Microsoft Rizwan&rdquo; tidak muncul, sistem operasi atau pelayar anda mungkin tidak menyediakan voice pack tersebut. <a href="ms-settings:regionlanguage" class="text-[var(--color-primary)] underline font-semibold">Buka tetapan Bahasa Windows</a> untuk memasang bahasa dan suara yang tersedia, kemudian tekan Benarkan & Sediakan semula.',
+        voiceGuideWindowsText: 'Tetapan &rarr; Masa & bahasa &rarr; Bahasa & rantau &rarr; Tambah bahasa &rarr; cari &ldquo;Malay (Malaysia)&rdquo; &rarr; Pilihan bahasa &rarr; Teks ke pertuturan &rarr; Muat turun. Tutup dan buka semula pelayar selepas selesai.',
+        voiceGuideAndroidText: 'Tetapan &rarr; Pengurusan umum atau Sistem &rarr; Output teks ke pertuturan &rarr; Enjin pilihan &rarr; pilih Google Speech Services &rarr; Pasang data suara &rarr; Malay (Malaysia). Nama menu mungkin berbeza mengikut jenama telefon.',
+        voiceGuideIphoneText: 'Tetapan &rarr; Kebolehcapaian &rarr; Kandungan Dituturkan &rarr; Suara &rarr; Malay &rarr; pilih dan muat turun suara yang tersedia. Selepas itu, buka semula Safari atau aplikasi.',
+        voiceGuideMacText: 'Tetapan Sistem &rarr; Kebolehcapaian &rarr; Baca & Sebut &rarr; Suara sistem &rarr; Urus Suara &rarr; cari Malay/Malay (Malaysia) &rarr; Muat turun. Buka semula pelayar selepas pemasangan.',
         voiceDecline: 'Tidak Sekarang',
         voiceAllow: 'Benarkan & Sediakan',
         noData: 'Tiada data dipadankan',
@@ -620,7 +619,7 @@ h3 {
         disconnectedStatus: 'Terputus'
       },
       en: {
-        title: 'STATUFL • Unit Dashboard',
+        title: 'STATUFL &bull; Unit Dashboard',
         heading: 'Unit Status',
         subtitle: 'Real-time Drip, Consumables & Trolley monitoring. Click any card to hear status.',
         notifications: 'Notifications',
@@ -691,10 +690,10 @@ h3 {
         voiceGuideIphone: 'iPhone / iPad',
         voiceGuideMac: 'macOS',
         voiceGuideMissing: 'If an English voice does not appear, your operating system or browser may not provide one. After installing a voice, select Allow & Set Up again.',
-        voiceGuideWindowsText: 'Settings → Time & language → Language & region → Add a language → search for “English” → Language options → Text-to-speech → Download. Close and reopen the browser when finished.',
-        voiceGuideAndroidText: 'Settings → General management or System → Text-to-speech output → Preferred engine → select Google Speech Services → Install voice data → choose English. Menu names may vary by phone brand.',
-        voiceGuideIphoneText: 'Settings → Accessibility → Spoken Content → Voices → English → select and download an available voice. Then reopen Safari or the app.',
-        voiceGuideMacText: 'System Settings → Accessibility → Read & Speak → System voice → Manage Voices → find an English voice → Download. Reopen the browser after installation.',
+        voiceGuideWindowsText: 'Settings &rarr; Time & language &rarr; Language & region &rarr; Add a language &rarr; search for &ldquo;English&rdquo; &rarr; Language options &rarr; Text-to-speech &rarr; Download. Close and reopen the browser when finished.',
+        voiceGuideAndroidText: 'Settings &rarr; General management or System &rarr; Text-to-speech output &rarr; Preferred engine &rarr; select Google Speech Services &rarr; Install voice data &rarr; choose English. Menu names may vary by phone brand.',
+        voiceGuideIphoneText: 'Settings &rarr; Accessibility &rarr; Spoken Content &rarr; Voices &rarr; English &rarr; select and download an available voice. Then reopen Safari or the app.',
+        voiceGuideMacText: 'System Settings &rarr; Accessibility &rarr; Read & Speak &rarr; System voice &rarr; Manage Voices &rarr; find an English voice &rarr; Download. Reopen the browser after installation.',
         voiceDecline: 'Not Now',
         voiceAllow: 'Allow & Set Up',
         noData: 'No matching data found',
@@ -863,7 +862,7 @@ h3 {
       const changedAt = readStatusTimes()[pinnedWard]?.changedAt;
       if (!unit || !changedAt || !unit.ready) return;
 
-      const statusKey = `${pinnedWard}|${signature([unit])}|${changedAt}`;
+      const statusKey = `${unit.unit}|${signature([unit])}|${changedAt}`;
       if (pinnedWardAnnouncementKey !== statusKey) {
         pinnedWardAnnouncementKey = statusKey;
       }
@@ -876,7 +875,7 @@ h3 {
         const currentUnit = data.find(item => item.unit === pinnedWard);
         const currentChangedAt = readStatusTimes()[pinnedWard]?.changedAt;
         const currentKey = currentUnit && currentChangedAt
-          ? `${pinnedWard}|${signature([currentUnit])}|${currentChangedAt}`
+          ? `${currentUnit.unit}|${signature([currentUnit])}|${currentChangedAt}`
           : '';
 
         if (currentKey === pinnedWardAnnouncementKey && currentUnit?.ready) {
@@ -908,7 +907,7 @@ h3 {
       const stale = ageMs > 180000;
       const ageMinutes = Math.floor(ageMs / 60000);
       const ageText = stale || failedPolls >= 3
-        ? (lang === 'bm' ? '⚠️ DATA TIDAK TERKINI - JANGAN BERGANTUNG PADA STATUS' : '⚠️ DATA NOT CURRENT - DO NOT RELY ON STATUS')
+        ? (lang === 'bm' ? '&#9888;&#65039; DATA TIDAK TERKINI - JANGAN BERGANTUNG PADA STATUS' : '&#9888;&#65039; DATA NOT CURRENT - DO NOT RELY ON STATUS')
         : (lang === 'bm'
           ? `Luar Talian - Data berusia ${ageMinutes} minit`
           : `Offline - Data is ${ageMinutes} minute${ageMinutes === 1 ? '' : 's'} old`);
@@ -922,7 +921,7 @@ h3 {
       const select = $('wardPin');
       const current = pinnedWard;
       const wards = [...new Set(data.map(u => u.unit))].sort();
-      select.innerHTML = `<option value="">${esc(T[lang].allUnits)}</option>` + wards.map(code => `<option value="${esc(code)}">${esc(code)} — ${esc(label(code))}</option>`).join('');
+      select.innerHTML = `<option value="">${T[lang].allUnits}</option>` + wards.map(code => `<option value="${esc(code)}">${esc(code)} &mdash; ${esc(label(code))}</option>`).join('');
       select.value = wards.includes(current) ? current : '';
     }
 
@@ -935,7 +934,7 @@ h3 {
       select.innerHTML = `<option value="">${unitPickerLang === 'en' ? 'Choose a unit or ward' : 'Pilih unit atau wad'}</option>` + wards.map(code => {
         const unitName = names[normalize(code)] || normalize(code);
         const translatedName = unitName.split('|')[unitPickerLang === 'bm' ? 1 : 0];
-        return `<option value="${esc(code)}">${esc(code)} — ${esc(translatedName)}</option>`;
+        return `<option value="${esc(code)}">${esc(code)} &mdash; ${esc(translatedName)}</option>`;
       }).join('');
       select.value = wards.includes(selected) ? selected : '';
     }
@@ -1112,11 +1111,11 @@ h3 {
           urgent = isUrgent(u),
           urgentLabel = u.priority && String(u.priority).toLowerCase() === 'high' ? t.highPriority : t.directIssueBadge,
           confirmLabel = lang === 'bm' ? 'Sahkan Telah Diambil' : 'Confirm Collected';
-        return `<article data-unit="${esc(u.unit)}" class="status-card ${urgent ? 'urgent-card' : ''} ${readyPulseCodes.has(u.unit) ? 'ready-pulse' : ''} ${tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima' ? 'new-indent-card' : ''} group relative border-4 ${u.ready?'card-ready-glow border-emerald-600':'border-slate-800 dark:border-slate-300'} rounded-2xl p-4 sm:p-5 cursor-pointer select-none"><div class="flex justify-between items-start mb-4"><div class="flex items-center gap-3 min-w-0"><div class="w-11 h-11 rounded-xl bg-slate-800 text-white font-mono font-bold text-lg flex items-center justify-center shadow-lg shrink-0 ward-code">${esc(u.unit)}</div><div class="min-w-0"><div class="flex flex-col items-start gap-1"><h2 class="text-xs font-semibold text-[var(--color-muted)] truncate ward-name">${esc(label(u.unit))}</h2>${urgent?`<span class="urgent-badge ${String(u.priority).toLowerCase() === 'high' ? 'urgent-high' : 'urgent-direct'}" title="${esc(urgentLabel)}"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${esc(urgentLabel)}</span>`:''}</div><div class="text-[10px] text-[var(--color-muted)] mt-0.5">${esc(u.unit)} ${u.ready?`<span class="ready-badge px-2 py-0.5 rounded bg-emerald-500 text-white font-bold"><span class="ready-flash">⚡</span> ${t.readyBadge}</span>`:''}${elapsed?`<span data-elapsed-unit="${esc(u.unit)}" class="elapsed-status">${esc(elapsed)}</span>`:''}</div></div></div><button type="button" class="speaker-btn w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0" aria-label="${esc(t.tapForAudio)}" title="${esc(t.tapForAudio)}" onclick="event.stopPropagation(); speakUnit(this.closest('.status-card'),'${esc(u.unit)}')"><i class="fa-solid fa-volume-high"></i></button></div><div class="rounded-xl border-4 border-slate-800 dark:border-slate-300 p-1.5 space-y-1.5"><div class="grid grid-cols-2 gap-1.5">${box(t.drip,'fa-pills',d)}${box(t.consumables,'fa-syringe',b)}</div><div class="rounded-lg p-2.5 border-2 border-slate-700 dark:border-slate-400 space-y-2">${!(tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima') ? `<div class="trolley-row flex items-center justify-between font-bold ${Number(u.jumlahTroli) === 0 ? 'trolley-empty' : ''}"><span><i class="fa-solid fa-cart-flatbed mr-2"></i>${t.trolleyQuantity}</span><b class="trolley-count font-extrabold leading-none">${u.jumlahTroli}</b></div>` : ''}${needs(u)?`<div class="exception-badge trolley-required"><i class="fa-solid fa-truck-ramp-box mr-2"></i>${lang === 'bm' ? 'Troli Diperlukan' : 'Trolley Required'}</div>`:''}${urgent && u.directIssue && ['ya','yes'].includes(tr(u.directIssue))?`<div class="exception-badge urgent-issue"><i class="fa-solid fa-siren-on mr-2"></i>${lang === 'bm' ? 'ISU SEGERA' : 'URGENT ISSUE'}</div>`:''}${u.ready && pinnedWard === u.unit ? `<button type="button" onclick="confirmWardCollection('${esc(u.unit)}'); event.stopPropagation();" class="mt-3 w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2" aria-label="${confirmLabel}"><i class="fa-solid fa-clipboard-check"></i>${confirmLabel}</button>` : ''}</div></div></article>`
+        return `<article data-unit="${esc(u.unit)}" class="status-card ${urgent ? 'urgent-card' : ''} ${readyPulseCodes.has(u.unit) ? 'ready-pulse' : ''} ${tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima' ? 'new-indent-card' : ''} group relative border-4 ${u.ready ? 'card-ready-glow border-emerald-500' : 'border-slate-200 dark:border-slate-800'} rounded-[var(--radius)] p-5 cursor-pointer" onclick="speakUnit(this,'${esc(u.unit)}')"><div class="flex items-start justify-between gap-3 mb-4"><div class="flex items-center gap-3 min-w-0"><div class="ward-code w-12 h-12 rounded-2xl bg-[var(--color-primary)] text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-md">${esc(u.unit)}</div><div class="min-w-0"><div class="flex flex-col items-start gap-1"><h2 class="text-xs font-semibold text-[var(--color-muted)] truncate ward-name">${esc(label(u.unit))}</h2>${urgent?`<span class="urgent-badge ${String(u.priority).toLowerCase() === 'high' ? 'urgent-high' : 'urgent-direct'}" title="${esc(urgentLabel)}"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${esc(urgentLabel)}</span>`:''}</div><div class="text-[10px] text-[var(--color-muted)] mt-0.5">${esc(u.unit)} ${u.ready?`<span class="ready-badge px-2 py-0.5 rounded bg-emerald-500 text-white font-bold"><span class="ready-flash">&#9889;</span> ${t.readyBadge}</span>`:''}${elapsed?`<span data-elapsed-unit="${esc(u.unit)}" class="elapsed-status block">${esc(elapsed)}</span>`:''}</div></div></div><button type="button" class="speaker-btn w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0" aria-label="${esc(label(u.unit))} - ${esc(t.tapForAudio)}" onclick="event.stopPropagation(); speakUnit(this.closest('.status-card'),'${esc(u.unit)}')"><i class="fa-solid fa-volume-high"></i></button></div><div><div class="rounded-xl border-4 border-slate-200 dark:border-slate-800 p-3 space-y-3 bg-[var(--color-bg)]/60"><div class="grid grid-cols-2 gap-2.5">${box(t.drip,'fa-pills',d)}${box(t.consumables,'fa-box-open',b)}</div>${!(tr(u.drip) === 'indenbaruditerima' && tr(u.bukanUbat) === 'indenbaruditerima') ? `<div class="trolley-row flex items-center justify-between font-bold rounded-lg bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800 ${Number(u.jumlahTroli) <= 0 ? 'trolley-empty' : ''}"><span>${t.trolleyQuantity}</span><b class="trolley-count font-extrabold leading-none">${u.jumlahTroli}</b></div>` : ''}${needs(u)?`<div class="exception-badge trolley-required"><i class="fa-solid fa-truck-ramp-box mr-2"></i>${lang === 'bm' ? 'Troli Diperlukan' : 'Trolley Required'}</div>`:''}${urgent && u.directIssue && ['ya','yes'].includes(tr(u.directIssue))?`<div class="exception-badge urgent-issue"><i class="fa-solid fa-siren-on mr-2"></i>${lang === 'bm' ? 'ISU SEGERA' : 'URGENT ISSUE'}</div>`:''}${u.ready && pinnedWard === u.unit ? `<button type="button" onclick="confirmWardCollection('${esc(u.unit)}')" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition" aria-label="${confirmLabel}"><i class="fa-solid fa-clipboard-check"></i>${confirmLabel}</button>` : ''}</div></div></article>`
       }).join('') : `<div class="col-span-full text-center py-16 text-[var(--color-muted)]"><i class="fa-solid fa-magnifying-glass text-3xl mb-3"></i><p>${t.none}</p></div>`;
       $('pages').innerHTML = totalPages > 1 ? Array.from({
         length: totalPages
-      }, (_, i) => `<button onclick="goToPage(${i+1})" class="min-w-8 h-8 rounded-lg text-xs font-bold ${page===i+1?'bg-[var(--color-primary)] text-white':'bg-[var(--color-surface)] border border-slate-200 dark:border-slate-700'}">${i+1}</button>`).join('') : ''
+      }, (_, i) => `<button onclick="goToPage(${i+1})" class="min-w-8 h-8 rounded-lg text-xs font-bold ${page === i + 1 ? 'bg-[var(--color-primary)] text-white' : 'bg-[var(--color-surface)] border border-slate-200 dark:border-slate-800'}">${i+1}</button>`).join('') : ''
     }
 
     function applyInitialStatusColors() {
@@ -1156,7 +1155,7 @@ h3 {
             : 'fa-minus';
       const labelText = title === T[lang].drip ? T[lang].drip : T[lang].consumables;
       const inactiveDrip = title === T[lang].drip && tr(info[1]) === 'tidakaktif';
-      return `<div class="rag-tile ${rag} ${inactiveDrip ? 'rag-inactive-drip' : ''} rounded-lg p-3 sm:p-3.5 border-2 min-h-24 sm:min-h-28 flex flex-col justify-between" aria-label="${esc(labelText)}: ${esc(info[1])}"><span class="rag-label text-[14px] font-extrabold uppercase tracking-wide"><i class="fa-solid ${icon} mr-1.5" title="${esc(labelText)}" aria-label="${esc(labelText)}"></i>${esc(labelText)}</span><span class="block font-extrabold text-sm sm:text-base leading-tight mt-3"><i class="fa-solid ${statusIcon} status-icon mr-1.5" aria-hidden="true"></i>${info[1]}</span></div>`
+      return `<div class="rag-tile ${rag} ${inactiveDrip ? 'rag-inactive-drip' : ''} rounded-xl p-3.5 border transition-colors" title="${esc(labelText)}: ${esc(info[1])}"><span class="rag-label text-[14px] font-extrabold uppercase tracking-wide"><i class="fa-solid ${icon} mr-1.5" title="${esc(labelText)}" aria-label="${esc(labelText)}"></i>${esc(labelText)}</span><span class="block font-extrabold text-sm sm:text-base leading-tight mt-3"><i class="fa-solid ${statusIcon} status-icon mr-1.5" aria-hidden="true"></i>${info[1]}</span></div>`
     }
 
     function stats() {
@@ -1520,8 +1519,8 @@ h3 {
       const extraUnits = changedUnits.length - 1;
       const unitName = label(firstUnit.unit);
       const body = lang === 'bm'
-        ? `${unitName} telah berubah${extraUnits > 0 ? ` dan ${extraUnits} unit lain` : ''}.`
-        : `${unitName} has changed${extraUnits > 0 ? ` and ${extraUnits} other unit${extraUnits === 1 ? '' : 's'}` : ''}.`;
+        ? `Status ${unitName} telah dikemas kini${extraUnits > 0 ? ` dan ${extraUnits} unit lain` : ''}.`
+        : `${unitName} status updated${extraUnits > 0 ? ` and ${extraUnits} other unit${extraUnits === 1 ? '' : 's'}` : ''}.`;
 
       showBrowserNotification('STATUFL', {
         body,
@@ -1575,7 +1574,7 @@ h3 {
         lastSuccessfulUpdate = Date.now();
         updateRelativeTime();
         const ok = SUPABASE_URL && !SUPABASE_URL.includes('PASTE_YOUR') && failedPolls === 0;
-        $('connection').textContent = ok ? '● ' + T[lang].connected : '● ' + T[lang].noSheetConfig;
+        $('connection').textContent = ok ? '&#9679; ' + T[lang].connected : '&#9679; ' + T[lang].noSheetConfig;
       } catch (e) {} finally {
         refreshBusy = false;
         $('refreshIcon').classList.remove('refreshing');
@@ -1678,16 +1677,6 @@ h3 {
         if (value && translations[value]) element.setAttribute('data-tooltip-visible', translations[value]);
       });
 
-      const fullscreenButton = $('unitCardFullscreenButton');
-      if (fullscreenButton) {
-        const isFullscreen = document.body.classList.contains('unit-card-fullscreen');
-        const label = isFullscreen ? translations['Exit fullscreen'] : translations['Show unit card fullscreen'];
-        fullscreenButton.setAttribute('aria-label', label);
-        fullscreenButton.setAttribute('title', label);
-        fullscreenButton.setAttribute('data-tooltip-visible', label);
-        fullscreenButton.querySelector('span')?.replaceChildren(document.createTextNode(isFullscreen ? 'Keluar skrin penuh' : 'Skrin penuh'));
-      }
-
       const floatingButton = $('fullscreenToggleButton');
       if (floatingButton) {
         const isFullscreen = document.body.classList.contains('unit-card-fullscreen');
@@ -1738,7 +1727,7 @@ h3 {
       if (footer) {
         const lines = footer.querySelectorAll('p');
         if (lines[0]) lines[0].textContent = 'Developed by IKN Pharmacy 2026';
-        if (lines[1]) lines[1].textContent = '⚠️ All rights reserved.';
+        if (lines[1]) lines[1].textContent = '&#9888;&#65039; All rights reserved.';
       }
 
       document.querySelectorAll('[title], [aria-label]').forEach(element => {
@@ -1793,8 +1782,8 @@ h3 {
       $('sheetUrl').placeholder = lang === 'bm' ? $('sheetUrl').dataset.placeholderBm : $('sheetUrl').dataset.placeholderEn;
       $('sheetName').placeholder = lang === 'bm' ? $('sheetName').dataset.placeholderBm : $('sheetName').dataset.placeholderEn;
       $('sheetRange').placeholder = lang === 'bm' ? $('sheetRange').dataset.placeholderBm : $('sheetRange').dataset.placeholderEn;
-      $('connection').textContent = '● ' + t.connectedStatus;
-      $('tapCueText').innerHTML = `<i class="fa-solid fa-volume-high text-[var(--color-primary)] mr-1"></i>${t.tapForAudio}`;
+      $('connection').textContent = '&#9679; ' + t.connectedStatus;
+      if ($('tapCueText')) $('tapCueText').innerHTML = `<i class="fa-solid fa-volume-high text-[var(--color-primary)] mr-1"></i>${t.tapForAudio}`;
       const filterLabels = {
         all: t.allUnits,
         ready: t.filterReady,
@@ -1911,7 +1900,7 @@ h3 {
         return;
       }
 
-      setDailyReportStatus(lang === 'en' ? 'Subscribing this email to the daily report…' : 'Sedang mendaftar emel untuk laporan harian…');
+      setDailyReportStatus(lang === 'en' ? 'Subscribing this email to the daily report&hellip;' : 'Sedang mendaftar emel untuk laporan harian&hellip;');
       try {
         const result = await requestDailyReportSubscription('subscribe', email);
         if (!result || result.success !== true) throw new Error(result?.message || (lang === 'en' ? 'Subscription failed.' : 'Pendaftaran tidak berjaya.'));
@@ -1930,7 +1919,7 @@ h3 {
         return;
       }
 
-      setDailyReportStatus(lang === 'en' ? 'Processing your unsubscribe request…' : 'Sedang memproses permintaan berhenti langgan…');
+      setDailyReportStatus(lang === 'en' ? 'Processing your unsubscribe request&hellip;' : 'Sedang memproses permintaan berhenti langgan&hellip;');
       try {
         const result = await requestDailyReportSubscription('unsubscribe', email);
         if (!result || result.success !== true) throw new Error(result?.message || (lang === 'en' ? 'Request failed.' : 'Permintaan tidak berjaya.'));
@@ -2646,7 +2635,7 @@ h3 {
 
   <footer class="border-t border-[var(--color-alert)]/30 px-4 py-6 text-center text-sm text-[var(--color-alert)]">
     <p class="font-semibold">Dibangunkan oleh Farmasi IKN 2026</p>
-    <p class="mt-1">⚠️&nbsp; Hak Cipta Terpelihara.</p>
+    <p class="mt-1">&#9888;&#65039;&nbsp; Hak Cipta Terpelihara.</p>
   </footer>
 
   <script>
@@ -2699,6 +2688,46 @@ h3 {
         if (event.key === 'Escape' && body.classList.contains('unit-card-fullscreen')) setFullscreen(false);
       });
     })();
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('fullscreenToggleButton')) return;
+      const fullscreenToggle = document.createElement('button');
+      fullscreenToggle.type = 'button';
+      fullscreenToggle.id = 'fullscreenToggleButton';
+      fullscreenToggle.innerHTML = '<i class="fa-solid fa-expand" aria-hidden="true"></i>';
+      document.body.appendChild(fullscreenToggle);
+
+      fullscreenToggle.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        document.body.classList.remove('unit-card-fullscreen');
+      });
+    });
+
+    document.addEventListener('dblclick', event => {
+      const card = event.target.closest('.status-card');
+      if (!card || event.target.closest('button, input, select, a, label')) return;
+      event.preventDefault();
+
+      if (document.body.classList.contains('unit-card-fullscreen')) {
+        document.body.classList.remove('unit-card-fullscreen');
+        return;
+      }
+
+      if (!document.body.classList.contains('ward-pinned')) {
+        const unitCode = card.dataset.unit;
+        if (!unitCode) return;
+        pinnedWard = unitCode;
+        localStorage.setItem('statufl_pinned_ward', unitCode);
+        localStorage.setItem('statufl_first_unit_confirmed', 'yes');
+        window.location.reload();
+        return;
+      }
+
+      document.body.classList.toggle('unit-card-fullscreen');
+    });
   </script>
 
   <script>
