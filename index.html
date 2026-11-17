@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%237c3aed'/%3E%3Crect x='136' y='260' width='56' height='132' rx='16' fill='%23ffffff'/%3E%3Crect x='228' y='180' width='56' height='212' rx='16' fill='%23ffffff'/%3E%3Crect x='320' y='120' width='56' height='272' rx='16' fill='%23ffffff'/%3E%3C/svg%3E">
   <meta name="description" content="Papan pemuka pemantauan status unit hospital masa nyata">
   <title>STATUFL • Papan Pemuka Unit</title>
-  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="./theme.css">
   <script>
     function isNightTime() {
       const hour = new Date().getHours();
@@ -1075,11 +1075,11 @@ function status(v) {
     async function confirmWardCollection(unitCode) {
       if (!SUPABASE_URL || SUPABASE_URL.includes('PASTE_YOUR')) return;
       const { error } = await db.rpc('acknowledge_ward_collection', { target_unit: unitCode });
-      if (!error) {
-        $('changeToastText').textContent = `Pengambilan untuk ${unitCode} telah disahkan kepada Farmasi.`;
-        $('changeToast').classList.remove('hidden');
-        setTimeout(() => $('changeToast').classList.add('hidden'), 4000);
-      }
+      $('changeToastText').textContent = !error
+        ? `Pengambilan untuk ${unitCode} telah disahkan kepada Farmasi.`
+        : `Gagal mengesahkan pengambilan untuk ${unitCode}. Sila cuba lagi.`;
+      $('changeToast').classList.remove('hidden');
+      setTimeout(() => $('changeToast').classList.add('hidden'), 4000);
     }
 
     function render() {
@@ -1457,7 +1457,7 @@ function status(v) {
     }
     let notificationRegistration = null;
 
-    const VAPID_PUBLIC_KEY = 'PASTE_YOUR_VAPID_PUBLIC_KEY_HERE';
+    const VAPID_PUBLIC_KEY = 'BMAnW6PwxLwkQyOzBW8Pew0NkMjgRFQMhKEuQoPWDsQoVyvyUrrxtF-4egKfwRyxKIcBHCsMJn-A3ACyrUm5_ag';
 
     function urlBase64ToUint8Array(base64String) {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -2607,7 +2607,6 @@ function status(v) {
         navigator.serviceWorker.addEventListener('message', async event => {
           if (event.data?.type === 'STATUFL_PUSH_RECEIVED' && event.data.payload) {
             const { title, body } = event.data.payload;
-            playAudioChime();
             showAllstatToast(title || 'STATUFL', body || '');
             if ($('unitPickerModal')?.classList.contains('hidden')) {
               refresh();
