@@ -1075,8 +1075,30 @@ function status(v) {
     async function confirmWardCollection(unitCode) {
       if (!SUPABASE_URL || SUPABASE_URL.includes('PASTE_YOUR')) return;
       const { error } = await db.rpc('acknowledge_ward_collection', { target_unit: unitCode });
+      if (!error) {
+        const idx = data.findIndex(u => u.unit === unitCode);
+        if (idx >= 0) {
+          data[idx] = {
+            ...data[idx],
+            drip: 'Inden Belum Diterima',
+            bukanUbat: 'Inden Belum Diterima',
+            jumlahTroli: 0,
+            perluTroli: 'No',
+            priority: '',
+            directIssue: '',
+            ready: false
+          };
+          readyPulseCodes.delete(unitCode);
+          trackStatusTimes(data);
+          localStorage.setItem(STATUS_CACHE_KEY, JSON.stringify(data));
+          lastSignature = signature(data);
+          stats();
+          render();
+          schedulePinnedWardReadyAnnouncement();
+        }
+      }
       $('changeToastText').textContent = !error
-        ? `Pengambilan untuk ${unitCode} telah disahkan kepada Farmasi.`
+        ? `Pengambilan untuk ${unitCode} telah disahkan & status kad ditetapkan semula.`
         : `Gagal mengesahkan pengambilan untuk ${unitCode}. Sila cuba lagi.`;
       $('changeToast').classList.remove('hidden');
       setTimeout(() => $('changeToast').classList.add('hidden'), 4000);
