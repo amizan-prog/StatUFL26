@@ -1274,26 +1274,19 @@ function status(v) {
       document.querySelectorAll('.speaking').forEach(x => x.classList.remove('speaking'));
     }
 
-    function playAudioChime() {
-      if (!('AudioContext' in window || 'webkitAudioContext' in window)) return;
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const context = new AudioCtx();
-        const oscillator = context.createOscillator();
-        const gain = context.createGain();
-        const now = context.currentTime;
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, now);
-        oscillator.frequency.exponentialRampToValueAtTime(660, now + 0.1);
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.045, now + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
-        oscillator.connect(gain);
-        gain.connect(context.destination);
-        oscillator.start(now);
-        oscillator.stop(now + 0.1);
-        setTimeout(() => context.close().catch(() => {}), 180);
-      } catch (error) {}
+    // =========================================================================
+    // NATIVE DEVICE CHIME / RINGTONE VIA OS NOTIFICATION CHANNEL
+    // =========================================================================
+    function playAudioChime(title = 'STATUFL', body = 'Kemas kini status unit baharu.', tag = null) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      showBrowserNotification(title, {
+        body,
+        tag: tag || `statufl-chime-${Date.now()}`,
+        silent: false,
+        renotify: true,
+        requireInteraction: true,
+        vibrate: [200, 100, 200, 100, 400]
+      });
     }
 
     async function speakUnit(el, code, forceAnnouncement = false) {
@@ -1386,7 +1379,7 @@ function status(v) {
           : englishAnnouncement;
 
       if (!('speechSynthesis' in window)) {
-        playAudioChime();
+        playAudioChime(`STATUFL • ${code}`, fullAnnouncement, `statufl-speech-${code}-${Date.now()}`);
         el.classList.remove('speaking');
         return;
       }
@@ -1395,13 +1388,10 @@ function status(v) {
         ? selectedBmVoice
         : englishFallbackVoice;
       if (!selectedVoice) {
-        playAudioChime();
+        playAudioChime(`STATUFL • ${code}`, fullAnnouncement, `statufl-speech-${code}-${Date.now()}`);
         el.classList.remove('speaking');
         return;
       }
-
-      playAudioChime();
-      await new Promise(resolve => setTimeout(resolve, 180));
 
       const utterance = new SpeechSynthesisUtterance(fullAnnouncement);
       const nativeBmVoice = selectedIndonesianVoice ? selectedBmVoice : null;
@@ -1519,12 +1509,19 @@ function status(v) {
       if (!('Notification' in window) || Notification.permission !== 'granted') return false;
 
       const registration = notificationRegistration || await registerNotificationServiceWorker();
+      const mergedOptions = {
+        silent: false,
+        renotify: true,
+        requireInteraction: true,
+        vibrate: [200, 100, 200, 100, 400],
+        ...options
+      };
 
       try {
         if (registration?.showNotification) {
-          await registration.showNotification(title, options);
+          await registration.showNotification(title, mergedOptions);
         } else {
-          new Notification(title, options);
+          new Notification(title, mergedOptions);
         }
         return true;
       } catch (error) {
@@ -1533,7 +1530,7 @@ function status(v) {
     }
 
     function sendStatusNotification(previousData, incomingData) {
-      if (!notificationsEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
       const previousSignature = signature(previousData);
       const incomingSignature = signature(incomingData);
@@ -1547,16 +1544,20 @@ function status(v) {
 
       if (!changedUnits.length) return;
 
-      const firstUnit = changedUnits[0];
+      const pinnedChanged = changedUnits.find(u => u.unit === pinnedWard);
+      const firstUnit = pinnedChanged || changedUnits[0];
       const extraUnits = changedUnits.length - 1;
       const unitName = label(firstUnit.unit);
+      const statusText = status(firstUnit.drip)[1];
       const body = lang === 'bm'
-        ? `${unitName} telah berubah${extraUnits > 0 ? ` dan ${extraUnits} unit lain` : ''}.`
-        : `${unitName} has changed${extraUnits > 0 ? ` and ${extraUnits} other unit${extraUnits === 1 ? '' : 's'}` : ''}.`;
+        ? `${unitName} (${statusText})${extraUnits > 0 ? ` dan ${extraUnits} unit lain` : ''} telah dikemas kini.`
+        : `${unitName} (${statusText})${extraUnits > 0 ? ` and ${extraUnits} other unit${extraUnits === 1 ? '' : 's'}` : ''} updated.`;
 
-      showBrowserNotification('STATUFL', {
+      showBrowserNotification(`🔔 STATUFL • ${firstUnit.unit}`, {
         body,
-        tag: 'statufl-status-change'
+        tag: `statufl-status-${firstUnit.unit}-${Date.now()}`,
+        silent: false,
+        renotify: true
       });
     }
 
@@ -1582,7 +1583,6 @@ function status(v) {
         const incomingPinned = incoming.find(u => u.unit === pinnedWard);
         const pinnedStatusChanged = !wallMode && autoChime && pinnedWardChanged(previousPinned, incomingPinned);
         if (wallMode) announceWallMonitorChanges(data, incoming);
-        if (pinnedStatusChanged) playAudioChime();
         sendStatusNotification(data, incoming);
         data = incoming;
         trackStatusTimes(data);
@@ -2446,7 +2446,6 @@ function status(v) {
         && pinnedWardChanged(previousUnit, updatedUnit);
 
       if (wallMode) announceWallMonitorChanges(previousData, data);
-      if (pinnedStatusChanged) playAudioChime();
       sendStatusNotification(previousData, data);
 
       failedPolls = 0;
@@ -2501,7 +2500,6 @@ function status(v) {
       if (Number(record.id) <= lastSeenId) return;
 
       localStorage.setItem(LAST_ALLSTAT_KEY, String(record.id));
-      playAudioChime();
       showAllstatToast(record.title, record.body);
 
       if ('Notification' in window && Notification.permission === 'granted') {
@@ -2509,9 +2507,10 @@ function status(v) {
         const options = {
           body: record.body,
           tag: 'statufl-allstat-' + record.id,
+          silent: false,
           renotify: true,
           requireInteraction: true,
-          vibrate: [200, 100, 200]
+          vibrate: [200, 100, 200, 100, 400]
         };
         if (reg?.showNotification) {
           await reg.showNotification(record.title, options);
