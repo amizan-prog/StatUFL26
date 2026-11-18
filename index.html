@@ -2839,35 +2839,53 @@ function status(v) {
     @media (min-width: 768px) {
       .ward-pinned #grid .ward-code,
       .unit-card-fullscreen #grid .ward-code {
-        width: clamp(3.75rem, 5.5vw, 5.25rem);
-        height: clamp(3.75rem, 5.5vw, 5.25rem);
-        font-size: clamp(1.15rem, 1.8vw, 1.65rem);
+        width: clamp(4.5rem, 6.5vw, 6.5rem);
+        height: clamp(4.5rem, 6.5vw, 6.5rem);
+        font-size: clamp(1.5rem, 2.4vw, 2.25rem);
       }
       .ward-pinned #grid .ward-name,
       .unit-card-fullscreen #grid .ward-name {
-        font-size: clamp(1.1rem, 2.1vw, 2rem);
-        line-height: 1.15;
+        font-size: clamp(1.5rem, 2.8vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.12;
       }
       .ward-pinned #grid .card-subcode,
       .unit-card-fullscreen #grid .card-subcode {
-        font-size: clamp(0.8rem, 1.1vw, 1rem);
+        font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+      }
+      .ward-pinned #grid .ready-badge,
+      .unit-card-fullscreen #grid .ready-badge {
+        font-size: clamp(0.85rem, 1.2vw, 1.15rem);
+        padding: 0.25rem 0.65rem;
       }
       .ward-pinned #grid .rag-tile .rag-label,
       .unit-card-fullscreen #grid .rag-tile .rag-label {
-        font-size: clamp(1.15rem, 1.8vw, 1.85rem) !important;
+        font-size: clamp(1.45rem, 2.3vw, 2.45rem) !important;
+        line-height: 1.15;
       }
       .ward-pinned #grid .rag-tile span:last-child,
       .unit-card-fullscreen #grid .rag-tile span:last-child {
-        font-size: clamp(1.4rem, 2.4vw, 2.35rem) !important;
+        font-size: clamp(2rem, 3.6vw, 3.5rem) !important;
+        line-height: 1.1;
       }
       .ward-pinned #grid .trolley-row > span,
       .unit-card-fullscreen #grid .trolley-row > span {
-        font-size: clamp(1rem, 1.6vw, 1.5rem);
+        font-size: clamp(1.35rem, 2.2vw, 2.1rem);
       }
       .ward-pinned #grid .trolley-count,
       .unit-card-fullscreen #grid .trolley-count {
-        font-size: clamp(2.75rem, 6.2vh, 5.25rem) !important;
-        line-height: 1;
+        font-size: clamp(3.75rem, 8.5vh, 7.5rem) !important;
+        line-height: 0.95;
+      }
+      .ward-pinned #grid .exception-badge,
+      .unit-card-fullscreen #grid .exception-badge {
+        font-size: clamp(1.1rem, 1.8vw, 1.65rem);
+        padding: clamp(0.5rem, 1vh, 0.9rem) 1.25rem;
+      }
+      .ward-pinned #grid .confirm-collect-btn,
+      .unit-card-fullscreen #grid .confirm-collect-btn {
+        min-height: clamp(3.25rem, 6.5vh, 5rem);
+        font-size: clamp(1.2rem, 1.9vw, 1.75rem);
       }
     }
     .statufl-fullscreen-bar {
